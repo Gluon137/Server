@@ -64,6 +64,3 @@ logs/
 *.db
 *.db-*
 /server-bestand-*.txt
-/ILIAS-Schule-Lernmodul-SCORM12.zip
-/terraria/config/
-/terraria/worlds/
