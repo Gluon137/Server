@@ -11,6 +11,22 @@ Server-Konfigurationen und Deployment-Skripte.
 - `.server-tools/problem-reports/`: Meldungsdienst mit Apache- und systemd-Konfiguration.
 - Startskripte im Hauptverzeichnis: lokale Server für Baustein- und Kästchen-Studio.
 
+## Gestaltung
+
+Startseite, Studios und Berichtsübersicht teilen sich eine Gestaltungsgrundlage unter
+`website/shared/`:
+
+- `werkstatt.css`: Farb-, Schrift- und Abstandsvariablen (`--ws-*`), Kopfleiste, Studio-Umschalter,
+  Schaltflächen und Fußzeile. Jedes Studio setzt über `data-app` eine eigene Akzentfarbe.
+  Studio-Stylesheets laden danach und verwenden diese Variablen.
+- `icons.svg`: gemeinsame Linien-Icons, eingebunden über `<use href="…/shared/icons.svg#i-…">`.
+- `studios.mjs` und `werkstatt.mjs`: eine Studioliste für den Umschalter in der Kopfleiste
+  und für den Hinweis „Entwurf gespeichert“ auf der Startseite.
+
+Auf breiten Bildschirmen füllt die Werkbank eines Studios das Fenster; die Einstellungen
+scrollen getrennt von der Vorschau. Sichtbarer Text ist mindestens 12 px groß.
+`node tests/werkstatt-shell.mjs` prüft, dass alle Studios dieselbe Grundlage einbinden.
+
 ## Lokal starten
 
 Für die statischen Anwendungen im Hauptverzeichnis ausführen:

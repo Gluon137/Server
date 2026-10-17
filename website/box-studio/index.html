@@ -1,16 +1,87 @@
 <!doctype html>
-<html lang="de"><head><meta charset="utf-8"><script src="../shared/problem-reporter.js"></script><link rel="stylesheet" href="../shared/problem-reporter.css"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Kästchen, Gehäuse und bewegliche Einsätze gestalten. Mit echter Materialstärke und maßhaltigen SVG-Schnittplatten."><title>Kästchen-Studio</title><link rel="icon" href="data:,"><link rel="stylesheet" href="./style.css"><script type="importmap">{"imports":{"three":"../baustein-studio/vendor/three.module.js"}}</script></head><body data-app="box-studio">
-<header><a class="brand" href="../"><span class="brand-icon" aria-hidden="true">▱</span><span>Kästchen<span class="brand-light"> / Studio</span></span></a><span class="privacy">● &nbsp; Entwurf auf diesem Gerät gespeichert</span><a class="text-link" href="#howto">So funktioniert’s ↗</a></header>
-<main><section class="intro" data-hero="box-studio"><div><div class="eyebrow" data-hero-eyebrow>VOM ENTWURF ZUM LIEBLINGSSTÜCK</div><h1 data-hero-headline>Eine kleine Welt. Selbst gebaut.</h1><p data-hero-subline>Kästchen gestalten, Flächen bearbeiten, Mechanik ausprobieren.</p></div><span class="edition">WERKZEUG № 03<br>ENTWURF → LASERSCHNITT</span></section><noscript>Bitte JavaScript aktivieren.</noscript>
-<div class="workspace"><aside class="controls" aria-label="Kästchen gestalten">
-<section class="control-section"><h2><span>01</span> Form &amp; Maße</h2><label class="wide">Beispiel<select id="example"><option value="default">Klassisches Kästchen</option><option value="rounded">Runde Ecken</option><option value="cylinder">Runde Dose</option><option value="mechanism">Kästchen mit Drehteil</option></select></label><div id="boxFields" class="field-grid"></div><div class="history"><button id="undo" aria-label="Rückgängig" title="Strg/⌘ Z">↶</button><button id="redo" aria-label="Wiederholen" title="Strg/⌘ Umschalt Z">↷</button><button id="reset">Startentwurf</button></div></section>
-<section class="control-section"><h2><span>02</span> Material &amp; Passung</h2><div id="materialFields" class="field-grid"></div><p class="small">Alle Längen in mm. Burn = halbe Schnittbreite; keine zweite Korrektur in der Lasersoftware. Biegestreckung passt die abgewickelte flexible Wand an dein Material an.</p></section>
-<section class="control-section"><h2><span>03</span> Teile &amp; Motive</h2><label class="wide">Bauteil auswählen<select id="partSelect"></select></label><div class="button-row"><button id="hideSelected">Teil ausblenden</button><button id="showAll">Alle zeigen</button></div><label class="wide">Zusätzliches Bauteil<select id="partPreset"><option value="divider">Trennwand</option><option value="shelf">Zwischenboden</option><option value="reinforcement">Verstärkung</option><option value="decoration">Dekorplatte</option><option value="slider">Schieberiegel</option><option value="rotor">Drehriegel</option><option value="custom">Eigene Kontur</option></select></label><button id="addPart" class="secondary">+ Bauteil ergänzen</button><div id="partFields"></div><div id="featureList" class="item-list"></div><label class="wide">Motiv / Öffnung<select id="featureShape"><option value="rect">Rechteck</option><option value="circle">Kreis</option><option value="slot">Langloch</option><option value="polygon">Polygon zeichnen</option><option value="pattern">Lochreihe</option><option value="text">Text als Pfade</option><option value="svg">SVG importieren</option></select></label><button id="addFeature" class="secondary">+ Auf dieser Fläche ergänzen</button><input type="file" id="svgFile" accept=".svg,image/svg+xml" hidden><div id="featureFields"></div></section>
-<section class="control-section"><h2><span>04</span> Gruppen &amp; Zukaufteile</h2><div id="groupFields"></div><button id="addGroup" class="secondary">+ Bewegungsgruppe</button><div id="hardwareFields"></div><button id="addHardware" class="secondary">+ Schraube / Zukaufteil</button></section>
-<section class="control-section"><h2><span>05</span> Für den Laser</h2><div id="layoutFields" class="field-grid"></div><label class="check"><input type="checkbox" id="rotate" checked> Teile auf der Platte drehen</label><label class="wide">Schnittplatte<select id="sheetSelect" disabled></select></label><button id="downloadSVG" class="primary" disabled>Platte als SVG herunterladen ↓</button><div id="sheetDownloads" class="sheet-downloads"></div><button id="downloadBOM" class="secondary" disabled>Stückliste als CSV ↓</button><p class="small">Schnittlinien sind kompensiert, die Vorschau zeigt die tatsächlichen Bauteile. Innenkonturen zuerst schneiden. Ungeprüfte Bewegungsintervalle vor dem Bau selbst kontrollieren.</p><div class="project-buttons"><button id="saveProject" class="secondary">Projekt speichern ↓</button><button id="loadProject" class="secondary">Projekt laden ↑</button></div><input id="projectFile" type="file" accept=".json,application/json" hidden><p id="saveStatus" class="small">Automatische Sicherung in diesem Browser.</p></section></aside>
-<section class="stage" aria-label="Vorschau und Bearbeitung"><div class="toolbar"><div class="tabs" role="group" aria-label="Ansicht"><button data-view="model" aria-pressed="true">3D</button><button data-view="surface" aria-pressed="false">Fläche bearbeiten</button><button data-view="motion" aria-pressed="false">Bewegung</button><button data-view="layout" aria-pressed="false">Schnittlayout</button></div><div class="camera-buttons"><button data-camera="iso">Räumlich</button><button data-camera="front">Vorn</button><button data-camera="top">Oben</button><button data-camera="fit">Einpassen</button></div></div>
-<div id="status" class="status" role="status" aria-live="polite">Entwurf wird vorbereitet …</div><button id="buildRetry" class="text-link" hidden>Erneut berechnen ↻</button><div id="serviceNote" class="service-note" hidden>Die Berechnung braucht den lokalen Dienst. Starte <code>./start-box-studio.sh</code> im Projektordner. Dein Entwurf bleibt bearbeitbar.</div>
-<div class="view-options" id="modelOptions"><label>Explosion <input id="explode" type="range" min="0" max="100" value="0"></label><label class="check"><input type="checkbox" id="hideWalls"> Wände ausblenden</label></div><div id="surfaceTools" class="view-options" hidden><button data-draw="select" aria-pressed="true">Auswählen</button><button data-draw="rect">Rechteck</button><button data-draw="circle">Kreis</button><button data-draw="polygon">Polygon</button><button data-draw="contour">Teilkontur</button><button id="finishPolygon">Kontur schließen</button><label>Raster <input type="number" id="grid" value="5" min="0.1" step="1" aria-label="Rasterweite in mm"></label><label class="check"><input id="snap" type="checkbox" checked> Einrasten</label></div>
-<div class="canvas" id="canvas"><span id="previewPending" class="preview-pending" hidden>Letzte berechnete Vorschau</span><div id="sceneHost"></div><div id="surfaceHost" hidden></div><div id="layoutPreview" hidden></div><div id="sceneFallback" class="scene-fallback" hidden>Die 3D-Ansicht ist auf diesem Gerät nicht verfügbar. Die Flächenbearbeitung und alle Maße bleiben zugänglich.</div><div class="canvas-tag">KÄSTCHEN-STUDIO <span id="viewTag">/ 3D</span></div><div class="canvas-scale">MAẞE IN MM</div></div>
-<div id="surfaceHint" class="surface-hint" hidden>Klicken und ziehen: Motiv verschieben oder zeichnen. Polygon: Punkte setzen, dann „Kontur schließen“. Eckpunkte bestehender Polygone lassen sich ziehen.</div><div id="motionControls" class="motion-controls" hidden></div><div id="checks" class="checks"></div><div class="stage-footer"><div><span id="metricSize" class="metric">200 × 140 × 100</span><span class="metric-label">Kästchen · mm</span></div><div><span id="metricParts" class="metric">—</span><span class="metric-label">Bauteile</span></div><div><span id="metricSheets" class="metric good">—</span><span class="metric-label">Schnittplatten</span></div></div><ul id="errors" class="errors" hidden></ul></section></div>
-<section class="howto" id="howto"><div class="eyebrow">PLATZ FÜR DEINE IDEEN</div><div class="howto-grid"><article><span>1 / GESTALTEN</span><h3>Die Form macht den Anfang.</h3><p>Rechteck, weiche Ecken oder eine runde Dose: Lege Innen- oder Außenmaße, Material und Deckel fest. Zusätzliche Teile sitzen auf einer wählbaren Fläche.</p></article><article><span>2 / AUSPROBIEREN</span><h3>Jede Fläche wird persönlich.</h3><p>Zeichne Ausschnitte, importiere SVG-Motive oder setze Text. Verschiebe Motive im Raster. Im Bewegungsmodus prüfst du Schieber, Drehteile und Gruppen.</p></article><article><span>3 / HERSTELLEN</span><h3>Vom Entwurf zum Einzelstück.</h3><p>Nach erfolgreicher Prüfung erhältst du maßhaltige Schnittplatten und die Stückliste. Teste Biegekerben und Passung zuerst an einem Materialrest.</p></article></div><details><summary>Bedienung &amp; Projektsicherung</summary><p>3D: Ziehen dreht, Umschalt + Ziehen verschiebt, Mausrad zoomt. Strg/⌘ Z: rückgängig. Projekt speichern sichert alle Teile, Motive, Gruppen und Zukaufteile. Ein ausgeblendetes Bauteil bleibt im Schnittlayout erhalten.</p></details></section></main><footer><span>Entworfen für neugierige Hände.</span><a href="../baustein-studio/">Zum Baustein-Studio ↗</a><span>Lokale Verarbeitung · Eigenes Projektformat</span></footer><script type="module" src="./app.mjs"></script><script type="module" src="../shared/hero-copy.mjs"></script></body></html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<script src="../shared/problem-reporter.js"></script>
+<link rel="stylesheet" href="../shared/problem-reporter.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Kästchen, Gehäuse und bewegliche Einsätze gestalten. Mit echter Materialstärke und maßhaltigen SVG-Schnittplatten.">
+<title>Kästchen-Studio · Digitale Werkstatt</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../shared/werkstatt.css">
+<link rel="stylesheet" href="./style.css">
+<script type="importmap">{"imports":{"three":"../baustein-studio/vendor/three.module.js"}}</script>
+<script type="module" src="../shared/werkstatt.mjs"></script>
+</head>
+<body data-app="box-studio">
+<a class="ws-skip" href="#werkbank">Zur Werkbank springen</a>
+<header class="ws-bar"><a class="ws-brand" href="../" aria-label="Digitale Werkstatt – Startseite"><svg class="ws-icon" aria-hidden="true"><use href="../shared/icons.svg#i-werkstatt"/></svg><span>Werkstatt</span></a><span class="ws-crumb" aria-hidden="true">/</span><details class="ws-switcher" data-ws-switcher="box-studio"><summary aria-label="Kästchen-Studio – anderes Studio wählen"><span class="ws-studio-mark"><svg class="ws-icon" aria-hidden="true"><use href="../shared/icons.svg#i-box"/></svg></span>Kästchen-Studio<svg class="ws-icon ws-chevron" aria-hidden="true"><use href="../shared/icons.svg#i-chevron"/></svg></summary><div class="ws-menu"><a class="ws-menu-all" href="../#werkzeuge">Alle Studios</a></div></details><div class="ws-bar-actions"><span class="ws-local">Entwurf auf diesem Gerät gespeichert</span><a class="ws-link" href="#howto">So funktioniert’s</a></div></header>
+<main class="studio">
+<div class="studio-app">
+<section class="intro ws-studio-intro" data-hero="box-studio"><div><div class="eyebrow" data-hero-eyebrow>VOM ENTWURF ZUM LIEBLINGSSTÜCK</div><h1 data-hero-headline>Eine kleine Welt. Selbst gebaut.</h1><p data-hero-subline>Kästchen gestalten, Flächen bearbeiten, Mechanik ausprobieren.</p></div><ol class="flow" aria-label="Ablauf"><li>Form festlegen</li><li>Flächen gestalten</li><li>Schnittplatten laden</li></ol></section>
+<noscript>Bitte JavaScript aktivieren.</noscript>
+<div class="workspace" id="werkbank" tabindex="-1">
+<aside class="controls" aria-label="Kästchen gestalten">
+<section class="control-section"><h2><span>01</span> Form &amp; Maße</h2>
+<label class="wide">Beispiel<select id="example"><option value="default">Klassisches Kästchen</option><option value="rounded">Runde Ecken</option><option value="cylinder">Runde Dose</option><option value="mechanism">Kästchen mit Drehteil</option></select></label>
+<div id="boxFields" class="field-grid"></div>
+<div class="history"><button id="undo" aria-label="Rückgängig" title="Strg/⌘ Z">↶</button><button id="redo" aria-label="Wiederholen" title="Strg/⌘ Umschalt Z">↷</button><button id="reset">Startentwurf</button></div>
+</section>
+<section class="control-section"><h2><span>02</span> Material &amp; Passung</h2>
+<div id="materialFields" class="field-grid"></div>
+<p class="small">Alle Längen in mm. Burn = halbe Schnittbreite; keine zweite Korrektur in der Lasersoftware. Biegestreckung passt die abgewickelte flexible Wand an dein Material an.</p>
+</section>
+<section class="control-section"><h2><span>03</span> Teile &amp; Motive</h2>
+<label class="wide">Bauteil auswählen<select id="partSelect"></select></label>
+<div class="button-row"><button id="hideSelected">Teil ausblenden</button><button id="showAll">Alle zeigen</button></div>
+<label class="wide">Zusätzliches Bauteil<select id="partPreset"><option value="divider">Trennwand</option><option value="shelf">Zwischenboden</option><option value="reinforcement">Verstärkung</option><option value="decoration">Dekorplatte</option><option value="slider">Schieberiegel</option><option value="rotor">Drehriegel</option><option value="custom">Eigene Kontur</option></select></label>
+<button id="addPart" class="secondary">+ Bauteil ergänzen</button>
+<div id="partFields"></div>
+<div id="featureList" class="item-list"></div>
+<label class="wide">Motiv / Öffnung<select id="featureShape"><option value="rect">Rechteck</option><option value="circle">Kreis</option><option value="slot">Langloch</option><option value="polygon">Polygon zeichnen</option><option value="pattern">Lochreihe</option><option value="text">Text als Pfade</option><option value="svg">SVG importieren</option></select></label>
+<button id="addFeature" class="secondary">+ Auf dieser Fläche ergänzen</button>
+<input type="file" id="svgFile" accept=".svg,image/svg+xml" hidden>
+<div id="featureFields"></div>
+</section>
+<section class="control-section"><h2><span>04</span> Gruppen &amp; Zukaufteile</h2>
+<div id="groupFields"></div>
+<button id="addGroup" class="secondary">+ Bewegungsgruppe</button>
+<div id="hardwareFields"></div>
+<button id="addHardware" class="secondary">+ Schraube / Zukaufteil</button>
+</section>
+<section class="control-section"><h2><span>05</span> Für den Laser</h2>
+<div id="layoutFields" class="field-grid"></div>
+<label class="check"><input type="checkbox" id="rotate" checked> Teile auf der Platte drehen</label>
+<label class="wide">Schnittplatte<select id="sheetSelect" disabled></select></label>
+<button id="downloadSVG" class="primary" disabled>Platte als SVG herunterladen ↓</button>
+<div id="sheetDownloads" class="sheet-downloads"></div>
+<button id="downloadBOM" class="secondary" disabled>Stückliste als CSV ↓</button>
+<p class="small">Schnittlinien sind kompensiert, die Vorschau zeigt die tatsächlichen Bauteile. Innenkonturen zuerst schneiden. Ungeprüfte Bewegungsintervalle vor dem Bau selbst kontrollieren.</p>
+<div class="project-buttons"><button id="saveProject" class="secondary">Projekt speichern ↓</button><button id="loadProject" class="secondary">Projekt laden ↑</button></div>
+<input id="projectFile" type="file" accept=".json,application/json" hidden>
+<p id="saveStatus" class="small">Automatische Sicherung in diesem Browser.</p>
+</section>
+</aside>
+<section class="stage" aria-label="Vorschau und Bearbeitung">
+<div class="toolbar"><div class="tabs" role="group" aria-label="Ansicht"><button data-view="model" aria-pressed="true">3D</button><button data-view="surface" aria-pressed="false">Fläche bearbeiten</button><button data-view="motion" aria-pressed="false">Bewegung</button><button data-view="layout" aria-pressed="false">Schnittlayout</button></div><div class="camera-buttons"><button data-camera="iso">Räumlich</button><button data-camera="front">Vorn</button><button data-camera="top">Oben</button><button data-camera="fit">Einpassen</button></div></div>
+<div id="status" class="status" role="status" aria-live="polite">Entwurf wird vorbereitet …</div>
+<button id="buildRetry" class="text-link" hidden>Erneut berechnen ↻</button>
+<div id="serviceNote" class="service-note" hidden>Die Berechnung braucht den lokalen Dienst. Starte <code>./start-box-studio.sh</code> im Projektordner. Dein Entwurf bleibt bearbeitbar.</div>
+<div class="view-options" id="modelOptions"><label>Explosion <input id="explode" type="range" min="0" max="100" value="0"></label><label class="check"><input type="checkbox" id="hideWalls"> Wände ausblenden</label></div>
+<div id="surfaceTools" class="view-options" hidden><button data-draw="select" aria-pressed="true">Auswählen</button><button data-draw="rect">Rechteck</button><button data-draw="circle">Kreis</button><button data-draw="polygon">Polygon</button><button data-draw="contour">Teilkontur</button><button id="finishPolygon">Kontur schließen</button><label>Raster <input type="number" id="grid" value="5" min="0.1" step="1" aria-label="Rasterweite in mm"></label><label class="check"><input id="snap" type="checkbox" checked> Einrasten</label></div>
+<div class="canvas" id="canvas"><span id="previewPending" class="preview-pending" hidden>Letzte berechnete Vorschau</span><div id="sceneHost"></div><div id="surfaceHost" hidden></div><div id="layoutPreview" hidden></div><div id="sceneFallback" class="scene-fallback" hidden>Die 3D-Ansicht ist auf diesem Gerät nicht verfügbar. Die Flächenbearbeitung und alle Maße bleiben zugänglich.</div><div class="canvas-tag">KÄSTCHEN-STUDIO <span id="viewTag">/ 3D</span></div><div class="canvas-scale">Maße in mm</div></div>
+<div id="surfaceHint" class="surface-hint" hidden>Klicken und ziehen: Motiv verschieben oder zeichnen. Polygon: Punkte setzen, dann „Kontur schließen“. Eckpunkte bestehender Polygone lassen sich ziehen.</div>
+<div id="motionControls" class="motion-controls" hidden></div>
+<div id="checks" class="checks"></div>
+<div class="stage-footer"><div><span id="metricSize" class="metric">200 × 140 × 100</span><span class="metric-label">Kästchen · mm</span></div><div><span id="metricParts" class="metric">—</span><span class="metric-label">Bauteile</span></div><div><span id="metricSheets" class="metric good">—</span><span class="metric-label">Schnittplatten</span></div></div>
+<ul id="errors" class="errors" hidden></ul>
+</section>
+</div>
+</div>
+<section class="howto" id="howto"><div class="eyebrow">PLATZ FÜR DEINE IDEEN</div><div class="howto-grid"><article><span>1 / GESTALTEN</span><h3>Die Form macht den Anfang.</h3><p>Rechteck, weiche Ecken oder eine runde Dose: Lege Innen- oder Außenmaße, Material und Deckel fest. Zusätzliche Teile sitzen auf einer wählbaren Fläche.</p></article><article><span>2 / AUSPROBIEREN</span><h3>Jede Fläche wird persönlich.</h3><p>Zeichne Ausschnitte, importiere SVG-Motive oder setze Text. Verschiebe Motive im Raster. Im Bewegungsmodus prüfst du Schieber, Drehteile und Gruppen.</p></article><article><span>3 / HERSTELLEN</span><h3>Vom Entwurf zum Einzelstück.</h3><p>Nach erfolgreicher Prüfung erhältst du maßhaltige Schnittplatten und die Stückliste. Teste Biegekerben und Passung zuerst an einem Materialrest.</p></article></div><details><summary>Bedienung &amp; Projektsicherung</summary><p>3D: Ziehen dreht, Umschalt + Ziehen verschiebt, Mausrad zoomt. Strg/⌘ Z: rückgängig. Projekt speichern sichert alle Teile, Motive, Gruppen und Zukaufteile. Ein ausgeblendetes Bauteil bleibt im Schnittlayout erhalten.</p></details></section>
+</main>
+<footer class="ws-footer"><span>Entworfen für neugierige Hände.</span><a href="../baustein-studio/">Zum Baustein-Studio ↗</a><span>Lokale Verarbeitung · Eigenes Projektformat</span></footer>
+<script type="module" src="./app.mjs"></script>
+<script type="module" src="../shared/hero-copy.mjs"></script>
+</body>
+</html>

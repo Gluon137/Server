@@ -18,7 +18,7 @@ FILES = ['website/index.html']
 for studio in ('baustein-studio', 'box-studio', 'klappkarten-studio', 'drehscheiben-studio', 'zahnrad-studio'):
     FILES.append(f'website/{studio}/index.html')
 for studio in ('baustein-studio', 'box-studio', 'klappkarten-studio'):
-    FILES.extend((f'website/{studio}/app.mjs', f'website/{studio}/scene.mjs'))
+    FILES.extend((f'website/{studio}/app.mjs', f'website/{studio}/scene.mjs', f'website/{studio}/style.css'))
 FILES.append('website/klappkarten-studio/editor.mjs')
 for directory in ('website/shared', 'website/problem-reports'):
     FILES.extend(str(path.relative_to(ROOT)) for path in sorted((ROOT / directory).iterdir()) if path.is_file())

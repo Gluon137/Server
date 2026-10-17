@@ -8,16 +8,20 @@
 <link rel="icon" href="data:,">
 <script src="../shared/problem-reporter.js"></script>
 <link rel="stylesheet" href="../shared/problem-reporter.css">
+<link rel="stylesheet" href="../shared/werkstatt.css">
 <link rel="stylesheet" href="./style.css">
 <script type="module" src="../shared/hero-copy.mjs"></script>
+<script type="module" src="../shared/werkstatt.mjs"></script>
 <script type="module" src="./app.mjs"></script>
 </head>
 <body data-app="automaten-studio">
-<header><a class="brand" href="../" aria-label="Zur Digitalen Werkstatt"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="15" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="20" r="3" fill="currentColor"/><path d="M20 20L29 11H35" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="29" cy="11" r="3" fill="#d6e4af" stroke="currentColor"/></svg><span>Automaten<span class="brand-light"> / Studio</span></span></a><div class="header-links"><span class="local-note"><i></i> Dein Entwurf bleibt im Browser</span><a href="../">Werkstatt ↗</a><a href="#anleitung">So funktioniert’s ↗</a></div></header>
-<main>
-<section class="intro" data-hero="automaten-studio"><div><div class="eyebrow" data-hero-eyebrow>KLEINE MECHANIK. GROSSE GESCHICHTEN.</div><h1 data-hero-headline>Eine Kurbel. Dein kleines Theater.</h1><p data-hero-subline>Erfinde eine Figur, gib ihr Bewegung und bring sie auf die Werkbank.</p></div><div class="edition">DREHEN → STAUNEN → BAUEN<br>HOLZ · ACHSEN · EIN GUTER EINFALL</div></section>
+<a class="ws-skip" href="#werkbank">Zur Werkbank springen</a>
+<header class="ws-bar"><a class="ws-brand" href="../" aria-label="Digitale Werkstatt – Startseite"><svg class="ws-icon" aria-hidden="true"><use href="../shared/icons.svg#i-werkstatt"/></svg><span>Werkstatt</span></a><span class="ws-crumb" aria-hidden="true">/</span><details class="ws-switcher" data-ws-switcher="automaten-studio"><summary aria-label="Automaten-Studio – anderes Studio wählen"><span class="ws-studio-mark"><svg class="ws-icon" aria-hidden="true"><use href="../shared/icons.svg#i-automaten"/></svg></span>Automaten-Studio<svg class="ws-icon ws-chevron" aria-hidden="true"><use href="../shared/icons.svg#i-chevron"/></svg></summary><div class="ws-menu"><a class="ws-menu-all" href="../#werkzeuge">Alle Studios</a></div></details><div class="ws-bar-actions"><span class="ws-local">Dein Entwurf bleibt im Browser</span><a class="ws-link" href="#anleitung">So funktioniert’s</a></div></header>
+<main class="studio">
+<div class="studio-app">
+<section class="intro ws-studio-intro" data-hero="automaten-studio"><div><div class="eyebrow" data-hero-eyebrow>KLEINE MECHANIK. GROSSE GESCHICHTEN.</div><h1 data-hero-headline>Eine Kurbel. Dein kleines Theater.</h1><p data-hero-subline>Erfinde eine Figur, gib ihr Bewegung und bring sie auf die Werkbank.</p></div><ol class="flow" aria-label="Ablauf"><li>Bewegung wählen</li><li>Figur gestalten</li><li>Schnittbogen laden</li></ol></section>
 <noscript>Bitte JavaScript aktivieren, um den Automaten zu gestalten und Schnittdateien zu exportieren.</noscript>
-<div class="workspace">
+<div class="workspace" id="werkbank" tabindex="-1">
 <aside class="controls" aria-label="Automat gestalten">
 <section class="control-section"><h2><span>01</span> Die Bewegung</h2>
 <label class="field">Mechanik<select id="mechanism" data-path="mechanism.type"><option value="slider">Kurbel &amp; Schubstange</option><option value="eccentric">Exzenter &amp; Kulisse</option><option value="lever">Kurbel &amp; Kipphebel</option></select></label>
@@ -54,8 +58,9 @@
 <div id="checks" class="checks" aria-live="polite"></div><div class="legend"><span><i class="wood"></i> Gestell &amp; Führung</span><span><i class="mechanism"></i> Bewegte Mechanik</span><span><i class="figure"></i> Deine Figur</span></div>
 </section>
 </div>
+</div>
 <section id="anleitung" class="howto"><div class="eyebrow">VOM ERSTEN DREH ZUM EIGENEN AUTOMATEN</div><div class="howto-grid"><article><span>01 / ENTWERFEN</span><h2>Was soll sich bewegen?</h2><p>Wähle eine Mechanik und verändere ihren Hub oder Hebel. Nimm eine Figurvorlage oder zeichne deinen eigenen Umriss. Die markierte Klebestelle braucht rundherum 6 mm Platz.</p></article><article><span>02 / AUSPROBIEREN</span><h2>Einmal im Kreis denken.</h2><p>Drehe die Kurbel am Bildschirm. Die Vorschau zeigt dieselben Teile wie der Schnittbogen. Beweglichkeit und abgetastete Kollisionsprüfung werden getrennt ausgewiesen.</p></article><article><span>03 / BAUEN</span><h2>Jetzt wird’s handgemacht.</h2><p>Schneide zuerst den Passungstest. Lade Schnittbögen, Teileliste und Bauanleitung herunter. Verleime nur die gekennzeichneten Stellen; Lager und Gelenke müssen frei bleiben.</p></article></div><details><summary>Was die Vorschau prüft – und was der Probeschnitt zeigt</summary><p>Die Kinematik verwendet starre Teile mit idealen Gelenken. Stichproben sind kein vollständiger Kollisionsnachweis. Reibung, Holzverzug, Klebung, Verschleiß und die tatsächliche Passung müssen am Werkstück geprüft werden. Die Vorlagen sind geometrisch berechnet und noch nicht als physische Bausätze erprobt. Die Schnittdateien enthalten nominale Geometrie ohne Schnittfugenkorrektur.</p></details></section>
-</main><footer><span>Digitale Werkstatt / Automaten-Studio</span><a href="../">Weitere Ideen für deine Werkbank ↗</a></footer>
+</main><footer class="ws-footer"><span>Digitale Werkstatt · Automaten-Studio</span><a href="../">Weitere Ideen für deine Werkbank ↗</a></footer>
 <dialog id="figureDialog" aria-labelledby="drawingTitle"><div class="dialog-heading"><div><div class="eyebrow">DEINE FIGUR · EIN GESCHLOSSENER UMRISS</div><h2 id="drawingTitle">Punkt für Punkt zur eigenen Form.</h2></div><button id="cancelDrawing" type="button" aria-label="Zeichnen abbrechen">✕</button></div><p id="drawingHelp">Klicke für neue Punkte; ziehe Punkte zum Verschieben. Mit Tastatur: Pfeiltasten bewegen den Cursor, Enter setzt Punkte. Tab wählt vorhandene Punkte, Pfeiltasten verschieben sie.</p><div class="drawing-toolbar"><button id="anchorMode" type="button" aria-pressed="false">Klebestelle setzen</button><button id="deletePoint" type="button">Punkt löschen</button><span id="pointCount">0 / 256 Punkte</span></div><svg id="drawingSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="group" aria-label="Figurenumriss bearbeiten" aria-describedby="drawingHelp drawingStatus" tabindex="0"></svg><p id="drawingStatus" role="status" aria-live="polite"></p><div class="dialog-footer"><span>Die gestrichelte Fläche wird mit dem Träger verleimt.</span><button class="primary" id="closeContour" type="button">Kontur schließen &amp; übernehmen ✓</button></div></dialog>
 </body>
 </html>

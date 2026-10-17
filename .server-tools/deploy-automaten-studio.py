@@ -191,7 +191,7 @@ def main():
     mode.add_argument('--check-remote', action='store_true', help='Check live drift and service state without changing server files')
     args = parser.parse_args()
     files = sources()
-    manifest = {'baseline': BASELINES, 'files': {name: hashlib.sha256(data).hexdigest() for name, data in files.items()}, 'dependencies': {name: hashlib.sha256((ROOT / 'website' / name).read_bytes()).hexdigest() for name in ('shared/hero-copy.mjs', 'shared/problem-reporter.js', 'shared/problem-reporter.css')}}
+    manifest = {'baseline': BASELINES, 'files': {name: hashlib.sha256(data).hexdigest() for name, data in files.items()}, 'dependencies': {name: hashlib.sha256((ROOT / 'website' / name).read_bytes()).hexdigest() for name in ('shared/hero-copy.mjs', 'shared/problem-reporter.js', 'shared/problem-reporter.css', 'shared/werkstatt.css', 'shared/werkstatt.mjs', 'shared/studios.mjs', 'shared/icons.svg')}}
     compile(PREFLIGHT, '<preflight>', 'exec');compile(REMOTE, '<deploy>', 'exec')
     if args.dry_run:
         print(json.dumps({'status': 'dry-run', 'files': sorted(files), 'bytes': sum(map(len, files.values())), 'report_data': 'never included'}, indent=2))
