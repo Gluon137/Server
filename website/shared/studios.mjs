@@ -4,7 +4,7 @@ export const studios = [
   {id: 'baustein-studio', name: 'Baustein-Studio', summary: 'Steckmodelle aus Blöcken', storage: ['baustein-studio-project-v1']},
   {id: 'drehscheiben-studio', name: 'Drehscheiben-Studio', summary: 'Drehschablonen aus SVG', storage: []},
   {id: 'box-studio', name: 'Kästchen-Studio', summary: 'Kisten, Dosen und Deckel', storage: ['box-studio-project-v1']},
-  {id: 'klappkarten-studio', name: 'Klappkarten-Studio', summary: 'Pop-up-Karten aus einem Bogen', storage: ['klappkarten-studio-project-v2', 'klappkarten-studio-project-v1']},
+  {id: 'klappkarten-studio', name: 'Klappkarten-Studio', summary: 'Pop-up-Karten aus einem Bogen', storage: ['klappkarten-studio-project-v2', 'klappkarten-studio-project-v1'], signalsReady: true},
   {id: 'zahnrad-studio', name: 'Zahnrad-Studio', summary: 'Zahnradpaare mit Drehprobe', storage: []}
 ];
 

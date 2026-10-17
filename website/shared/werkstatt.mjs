@@ -58,15 +58,18 @@ export function buildSwitcher(details, base = '../') {
 
 // Merkt sich, ob eine Eingabe das gespeicherte Projekt verändert hat.
 export function trackEdits(studio, root = document, storage = globalThis.localStorage) {
-  let baseline;
+  let baseline, timer, settled = false;
   const read = () => { try { return studio.storage.map(key => storage.getItem(key)).join('\u0000'); } catch { return ''; } };
-  let timer;
+  // Studios speichern ihr Startprojekt erst nach dem Laden; frühere Eingaben setzen keine Vergleichsbasis.
+  const settle = () => setTimeout(() => { settled = true; }, 1500);
+  if (root.readyState === 'complete') settle(); else addEventListener('load', settle, {once: true});
+  const ready = () => settled && (!studio.signalsReady || root.body?.dataset.ready === 'true');
   const commit = () => {
     if (baseline === undefined || read() === baseline) return;
     try { storage.setItem(editedKey(studio), '1'); } catch { /* Speicher gesperrt: kein Hinweis */ }
   };
   const arm = event => {
-    if (!event.isTrusted || event.target?.closest?.('[data-problem-reporter],.ws-bar')) return;
+    if (!event.isTrusted || !ready() || event.target?.closest?.('[data-problem-reporter],.ws-switcher')) return;
     if (baseline === undefined) baseline = read();
     // Autosaves laufen teils verzögert; der Vergleich folgt kurz nach der Eingabe.
     clearTimeout(timer); timer = setTimeout(commit, 1500);
