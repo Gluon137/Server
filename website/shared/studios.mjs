@@ -8,7 +8,11 @@ export const studios = [
   {id: 'zahnrad-studio', name: 'Zahnrad-Studio', summary: 'Zahnradpaare mit Drehprobe', storage: []}
 ];
 
+// Studios speichern schon das Startbeispiel. Als Entwurf zählt ein Projekt erst,
+// wenn es sich nach einer Eingabe der Person verändert hat (siehe werkstatt.mjs).
+export const editedKey = studio => `werkstatt-edited:${studio.id}`;
+
 export function hasDraft(studio, storage = globalThis.localStorage) {
-  try { return studio.storage.some(key => storage?.getItem(key)); }
+  try { return storage?.getItem(editedKey(studio)) === '1' && studio.storage.some(key => storage.getItem(key)); }
   catch { return false; }
 }

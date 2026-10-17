@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync, existsSync} from 'node:fs';
-import {studios, hasDraft} from '../website/shared/studios.mjs';
+import {studios, hasDraft, editedKey} from '../website/shared/studios.mjs';
 
 const read = path => readFileSync(new URL('../website/' + path, import.meta.url), 'utf8');
 const landing = read('index.html');
@@ -21,10 +21,11 @@ for (const studio of studios) {
 }
 for (const id of [...landing.matchAll(/icons\.svg#(i-[a-z-]+)/g)].map(match => match[1])) assert.ok(icons.includes(`id="${id}"`), `Unknown icon ${id}`);
 
-const storage = keys => ({getItem: key => keys.includes(key) ? '{}' : null});
+const storage = keys => ({getItem: key => keys.includes(key) ? (key.startsWith('werkstatt-edited:') ? '1' : '{}') : null});
 const cards2 = studios.find(studio => studio.id === 'klappkarten-studio');
-assert.equal(hasDraft(cards2, storage(['klappkarten-studio-project-v1'])), true, 'Legacy drafts count');
-assert.equal(hasDraft(cards2, storage([])), false);
+assert.equal(hasDraft(cards2, storage(['klappkarten-studio-project-v1', editedKey(cards2)])), true, 'Edited legacy drafts count');
+assert.equal(hasDraft(cards2, storage(['klappkarten-studio-project-v2'])), false, 'An autosaved start example is no draft');
+assert.equal(hasDraft(cards2, storage([editedKey(cards2)])), false, 'A removed project is no draft');
 assert.equal(hasDraft(studios.find(studio => studio.id === 'zahnrad-studio'), storage(['x'])), false, 'Studios without storage never show drafts');
 assert.equal(hasDraft(cards2, {getItem() { throw new Error('blocked'); }}), false, 'Blocked storage is ignored');
 console.log(`Werkstatt shell passed: ${studios.length} studios share switcher, stylesheet, icons and draft hints.`);

@@ -97,7 +97,7 @@
 <script>
 // Projektaktionen: auf schmalen Bildschirmen aus der Kopfleiste in die Werkbank verlagern (kein Überlauf).
 (()=>{const group=document.querySelector('.project-bar'),bar=document.querySelector('.ws-bar-actions'),slot=document.getElementById('projectSlot'),narrow=matchMedia('(max-width:1023px)');
-const place=()=>{if(narrow.matches)slot.append(group);else bar.prepend(group);slot.hidden=!narrow.matches;};narrow.addEventListener('change',place);place();})();
+const place=()=>{const active=document.activeElement;if(narrow.matches)slot.append(group);else bar.prepend(group);slot.hidden=!narrow.matches;if(group.contains(active))active.focus({preventScroll:true});};narrow.addEventListener('change',place);place();})();
 </script>
 <script type="module" src="./app.mjs"></script>
 <script type="module" src="../shared/hero-copy.mjs"></script>

@@ -34,7 +34,7 @@ body[data-app=landing] .ws-bar,body[data-app=landing] .ws-footer{padding-inline:
 .project-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
 .project-card{position:relative;display:flex;flex-direction:column;min-width:0;background:var(--ws-surface);border:1px solid var(--ws-line);border-radius:var(--ws-radius-lg);overflow:hidden;box-shadow:var(--ws-shadow-sm);transition:transform .25s var(--ws-ease),box-shadow .25s var(--ws-ease),border-color .25s}
 .project-card:hover{transform:translateY(-3px);box-shadow:var(--ws-shadow-lg);border-color:var(--ws-line-strong)}
-.project-card:focus-within{border-color:var(--ws-accent);box-shadow:0 0 0 3px var(--ws-accent-soft),var(--ws-shadow)}
+.project-card:focus-within{border-color:var(--ws-accent)}
 .card-art{position:relative;aspect-ratio:16/9;background:radial-gradient(120% 90% at 50% 0%,#ffffffb3,transparent 70%),var(--ws-accent-soft);border-bottom:1px solid color-mix(in srgb,var(--ws-accent) 18%,transparent)}
 .card-art svg{position:absolute;inset:0;width:100%;height:100%}
 .card-art::after{content:'';position:absolute;inset:0;background-image:radial-gradient(color-mix(in srgb,var(--ws-accent) 22%,transparent) .8px,transparent .9px);background-size:14px 14px;mask-image:linear-gradient(#000,transparent 85%);-webkit-mask-image:linear-gradient(#000,transparent 85%);pointer-events:none}
@@ -50,6 +50,8 @@ body[data-app=landing] .ws-bar,body[data-app=landing] .ws-footer{padding-inline:
 .project-card h3 a{color:inherit;text-decoration:none}
 .project-card h3 a::after{content:'';position:absolute;inset:0;border-radius:inherit}
 .project-card h3 a:focus-visible{outline:0}
+.project-card:has(h3 a:focus-visible){outline:3px solid var(--ws-focus);outline-offset:3px}
+@supports not selector(:has(*)){.project-card h3 a:focus-visible{outline:3px solid var(--ws-focus);outline-offset:3px}}
 .project-quote{color:var(--ws-accent-ink);font-size:15px;line-height:1.45;font-weight:600;margin:0 0 10px}
 .description{font-size:14px;line-height:1.6;color:var(--ws-muted);margin:0 0 18px}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;margin-bottom:18px;padding:0;list-style:none}

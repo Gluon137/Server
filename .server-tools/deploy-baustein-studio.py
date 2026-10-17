@@ -1,5 +1,7 @@
 """Deploy the studio only, retaining a server-side rollback snapshot."""
 from pathlib import Path
+from urllib.request import urlopen
+import hashlib
 import os
 import subprocess
 import tarfile
@@ -80,6 +82,23 @@ except Exception:
 print('Deployment ready; rollback snapshot:', backup)
 '''
 
+# Startseite und Studio laden die gemeinsame Gestaltung aus /shared/.
+# Sie wird nur von deploy-workshop-updates.py veröffentlicht und muss vorher aktuell sein.
+SHARED_DEPENDENCIES = ('shared/werkstatt.css', 'shared/werkstatt.mjs', 'shared/studios.mjs', 'shared/icons.svg')
+
+
+def require_published_shared(public='https://v2202606364772466585.supersrv.de'):
+    for name in SHARED_DEPENDENCIES:
+        try:
+            with urlopen(public + '/' + name, timeout=15) as response:
+                published = hashlib.sha256(response.read()).hexdigest()
+        except OSError as error:
+            raise SystemExit(f'{name} ist auf dem Server nicht erreichbar ({error}). Zuerst .server-tools/deploy-workshop-updates.py ausführen.')
+        if published != hashlib.sha256((ROOT / 'website' / name).read_bytes()).hexdigest():
+            raise SystemExit(f'{name} ist auf dem Server nicht aktuell. Zuerst .server-tools/deploy-workshop-updates.py ausführen.')
+
+
+require_published_shared()
 with tempfile.TemporaryDirectory(prefix="baustein-deploy-") as temporary:
     archive = Path(temporary) / "studio.tgz"
     with tarfile.open(archive, "w:gz") as package:

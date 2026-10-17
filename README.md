@@ -27,6 +27,10 @@ Auf breiten Bildschirmen füllt die Werkbank eines Studios das Fenster; die Eins
 scrollen getrennt von der Vorschau. Sichtbarer Text ist mindestens 12 px groß.
 `node tests/werkstatt-shell.mjs` prüft, dass alle Studios dieselbe Grundlage einbinden.
 
+Beim Veröffentlichen zuerst `.server-tools/deploy-workshop-updates.py` ausführen: Nur dieses
+Skript liefert `website/shared/` aus. Die Skripte für Automaten-, Baustein- und Kästchen-Studio
+brechen ab, solange die gemeinsamen Gestaltungsdateien auf dem Server nicht aktuell sind.
+
 ## Lokal starten
 
 Für die statischen Anwendungen im Hauptverzeichnis ausführen:
