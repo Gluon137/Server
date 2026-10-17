@@ -1,0 +1,123 @@
+// Run with playwright-cli run-code; this exercises the actual studio and downloads.
+export default async function checkKlappkarten(rootPage,base='http://127.0.0.1:8766') {
+  // Never touch the browser's existing saved work; every run owns a fresh context.
+  const context=await rootPage.context().browser().newContext({viewport:{width:1440,height:1050}});
+  const page=await context.newPage();
+  try {
+  const check=(ok,message)=>{if(!ok)throw new Error(message);};
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
+  const legacy={version:1,card:{mode:'180',width:148,half:105},figures:[{id:'legacy-tree',name:'Altes Motiv',svg:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0 100V0H100V100Z"/></svg>',width:30,height:35,x:74,depth:18,carrierWidth:24,attachment:'folded',color:'#bd8554'}],layout:{width:600,height:400,gap:8},colors:{cut:'#ff0000',mountain:'#0000ff',valley:'#00aa00',engrave:'#000000'}};
+  const legacyRaw=JSON.stringify(legacy);
+  await context.addInitScript(raw=>{if(!localStorage.getItem('klappkarten-studio-project-v1'))localStorage.setItem('klappkarten-studio-project-v1',raw);},legacyRaw);
+  await page.goto(base+'/klappkarten-studio/');
+  const saved=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('klappkarten-studio-project-v2')));
+  const ready=()=>page.waitForFunction(()=>document.querySelector('#editorHost iframe')?.contentWindow?.svgEditor?.svgCanvas&&!document.querySelector('#downloadSVG').disabled);
+  const change=async(id,value)=>{await page.locator('#'+id).fill(String(value));await page.locator('#'+id).dispatchEvent('change');};
+  const upload=async(id,name,content,type)=>page.evaluate(({id,name,content,type})=>{
+    const dt=new DataTransfer();dt.items.add(new File([content],name,{type}));const input=document.getElementById(id);input.files=dt.files;input.dispatchEvent(new Event('change',{bubbles:true}));
+  },{id,name,content,type});
+  await ready();
+  check((await saved()).surface?.active&&(await saved()).surface.shapes.length===3,'Spatial architecture is the new start project');
+  await page.locator('#example').selectOption('animals');await page.locator('#loadExample').click();
+  await page.waitForFunction(()=>JSON.parse(localStorage.getItem('klappkarten-studio-project-v2')).figures.length===3);await ready();
+  check((await saved()).figures.length===3,'Three legacy example figures');
+  check(await page.locator('#legacyNotice').isVisible(),'First visit with only v1 offers explicit migration');
+  check(await page.evaluate(()=>localStorage.getItem('klappkarten-studio-project-v1'))===legacyRaw,'Initial v1 data survives new-app startup unchanged');
+  check((await saved()).version===2&&(await saved()).construction==='one-sheet','Explicit version 2 one-sheet construction');
+  check(await page.locator('#metricParts').innerText()==='1','Exactly one fabrication blank');
+  for(const [key,mode] of [['city','90'],['flower','90'],['butterfly','90'],['animals','90']]) {
+    const oldId=(await saved()).figures[0].id;
+    await page.locator('#example').selectOption(key);await page.locator('#loadExample').click();
+    await page.waitForFunction(oldId=>JSON.parse(localStorage.getItem('klappkarten-studio-project-v2')).figures[0].id!==oldId,oldId);
+    await page.waitForFunction(({mode})=>JSON.parse(localStorage.getItem('klappkarten-studio-project-v2')).card.mode===mode,{mode});
+    await ready();
+    check(await page.locator('#errors').isHidden(),'Normalized example '+key+' has valid geometry');
+    await page.locator('[data-view="motion"]').click();
+    await page.waitForSelector('#sceneHost canvas');
+    const before=JSON.stringify(await saved());
+    await page.locator('#angle').fill('0');await page.locator('#angle').dispatchEvent('input');
+    await page.locator('#angle').fill('180');await page.locator('#angle').dispatchEvent('input');
+    check(await page.locator('#angleValue').innerText()==='180° · flach','Flat net is explicitly labeled');
+    await page.locator('#angle').fill(mode);await page.locator('#angle').dispatchEvent('input');
+    check(before===JSON.stringify(await saved()),'Motion does not mutate fabrication state');
+    if(key==='butterfly'){
+      await page.locator('#playMotion').click();
+      await page.waitForFunction(()=>Number(document.querySelector('#angle').value)<89);
+      await page.locator('#playMotion').click();
+      await page.locator('#angle').fill(mode);await page.locator('#angle').dispatchEvent('input');
+      await page.screenshot({path:'output/playwright/klappkarten-einbogen.png'});
+    }
+  }
+  await page.locator('[data-view="layout"]').click();
+  await page.waitForSelector('#layoutHost svg');
+  check(await page.locator('#layoutHost svg > g').count()===4,'Four machine layers');
+  const downloadPromise=page.waitForEvent('download');await page.locator('#downloadSVG').click();
+  const downloaded=await downloadPromise;
+  await downloaded.saveAs('output/playwright/klappkarten-cut.svg');
+  let svg='';for await(const chunk of await downloaded.createReadStream())svg+=chunk.toString('utf8');
+  check(svg.includes('width="600mm"')&&svg.includes('id="FOLD_MOUNTAIN"'),'Millimetres and folds exported');
+  check(!/<(?:text|script|image)\b|stroke-dasharray|data-preview-only/.test(svg),'No preview labels or dashed machine paths');
+  check(!/<svg[^>]*viewBox="0 0 100 100"/.test(svg),'Source motif contours never emitted as separate closed pieces');
+  check([...svg.matchAll(/data-part="([^"]+)"/g)].every(match=>match[1]==='card'),'Only the integral card is exported');
+  const meshCheck=await page.evaluate(async()=>{const {buildProject,poseProject}=await import('./geometry.mjs');const p=JSON.parse(localStorage.getItem('klappkarten-studio-project-v2'));const b=buildProject(p),pose=poseProject(p,180);return {apertures:b.material.areas.base<b.material.areas.blank,identity:pose.panels.every(panel=>panel.triangles.every((t,i)=>t.every((q,j)=>Math.abs(q[0]-panel.sourceTriangles[i][j][0])<1e-6&&Math.abs(q[1]-panel.sourceTriangles[i][j][1])<1e-6&&Math.abs(q[2])<1e-6)))};});
+  check(meshCheck.apertures&&meshCheck.identity,'Real apertures and exact flat material identity');
+  const previous=JSON.stringify(await saved());
+  await upload('svgFile','unsafe.svg','<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>','image/svg+xml');
+  await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('nicht unterstützt'));
+  check(previous===JSON.stringify(await saved()),'Unsafe SVG preserves project');
+  await upload('projectFile','invalid.json','{"version":99}','application/json');
+  await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('Projekt nicht geladen'));
+  check(previous===JSON.stringify(await saved()),'Invalid project preserves autosave');
+  await change('cardWidth',0);await page.waitForFunction(()=>document.querySelector('#downloadSVG').disabled);
+  await change('cardWidth',148);await ready();
+  check(!await page.locator('#downloadSVG').isDisabled(),'Corrected equal value clears invalid state');
+  const old=(await saved()).figures[0].depth;
+  await change('figureDepth',180);await page.waitForSelector('#errors:visible');
+  check(await page.locator('#downloadSVG').isDisabled(),'Closed-envelope failure blocks export');
+  await change('figureDepth',old);await ready();
+  await page.locator('[data-view="design"]').click();
+  await upload('svgFile','kurve.svg','<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill-rule="evenodd" d="M0 100V20C0 -5 100 -5 100 20V100Z M40 30H60V45H40Z"/></svg>','image/svg+xml');
+  await page.waitForFunction(()=>JSON.parse(localStorage.getItem('klappkarten-studio-project-v2')).figures[0].name==='kurve');
+  await ready();check(/[cC]/.test((await saved()).figures[0].svg.match(/\bd="([^"]+)"/)?.[1]||''),'Bézier curve preserved');
+  await page.locator('#undo').click();await page.waitForFunction(()=>JSON.parse(localStorage.getItem('klappkarten-studio-project-v2')).figures[0].name!=='kurve');
+  await page.locator('#redo').click();await page.waitForFunction(()=>JSON.parse(localStorage.getItem('klappkarten-studio-project-v2')).figures[0].name==='kurve');
+  const dimensions=(await saved()).figures[0];
+  await page.locator('#applyMotif').click();await ready();
+  const after=(await saved()).figures[0];
+  check(Math.abs(after.width-dimensions.width)<.001&&Math.abs(after.height-dimensions.height)<.001,`No-op motif commit preserves physical size: ${dimensions.width}×${dimensions.height} became ${after.width}×${after.height}`);
+  await page.locator('#textInput').fill('ÄÖÜ');await page.locator('#addText').click();
+  await change('cardWidth',149);
+  await page.waitForFunction(()=>JSON.parse(localStorage.getItem('klappkarten-studio-project-v2')).card.width===149);
+  await page.waitForFunction(()=>JSON.parse(localStorage.getItem('klappkarten-studio-project-v2')).figures[0].sourceTexts?.some(t=>t.text==='ÄÖÜ'));
+  const withText=JSON.stringify(await saved());await page.reload();
+  await page.waitForFunction(()=>document.querySelector('#editorHost iframe')?.contentWindow?.svgEditor?.svgCanvas);
+  const restored=await saved(),expected=JSON.parse(withText);
+  const differences=[];for(let i=0;i<expected.figures.length;i++)for(const key of Object.keys(expected.figures[i]))if(JSON.stringify(expected.figures[i][key])!==JSON.stringify(restored.figures[i]?.[key]))differences.push(`${i}.${key}: ${JSON.stringify(expected.figures[i][key]).slice(0,160)} => ${JSON.stringify(restored.figures[i]?.[key]).slice(0,160)}`);
+  check(JSON.stringify(restored)===withText,'Reload restores outlined text and project state: '+differences.join('; '));
+  await page.evaluate(raw=>localStorage.setItem('klappkarten-studio-project-v1',raw),legacyRaw);
+  await page.reload();await page.waitForSelector('#legacyNotice:visible');
+  check(JSON.stringify(await saved())===withText,'Legacy discovery does not replace the active v2 project');
+  const originalDownload=page.waitForEvent('download');await page.locator('#legacyDownload').click();
+  let original='';for await(const chunk of await(await originalDownload).createReadStream())original+=chunk.toString('utf8');
+  check(original===legacyRaw,'Original v1 download is byte-for-byte preserved');
+  await page.locator('#legacyConvert').click();
+  await page.waitForFunction(()=>JSON.parse(localStorage.getItem('klappkarten-studio-project-v2')).figures[0]?.id==='legacy-tree');
+  await ready();check(await page.locator('#legacyNotice').isHidden(),'Explicit conversion dismisses the old-mechanism notice');
+  check(await page.evaluate(()=>localStorage.getItem('klappkarten-studio-project-v1'))===legacyRaw,'Old local key is never overwritten');
+  const converted=JSON.stringify(await saved());
+  check((await saved()).card.mode==='90'&&(await saved()).figures[0].bridgeWidth===3,'Explicit conversion creates integral supports');
+  await page.locator('#undo').click();await page.waitForFunction(()=>JSON.parse(localStorage.getItem('klappkarten-studio-project-v2')).figures[0]?.id!=='legacy-tree');
+  check(JSON.stringify(await saved())===withText,'Conversion is one undoable project transaction');
+  await page.locator('#redo').click();await page.waitForFunction(()=>JSON.parse(localStorage.getItem('klappkarten-studio-project-v2')).figures[0]?.id==='legacy-tree');
+  check(JSON.stringify(await saved())===converted,'Conversion redo preserves the design');
+  await page.reload();await ready();check(await page.locator('#legacyNotice').isHidden(),'Acknowledged legacy source is not repeatedly offered');
+  await upload('projectFile','alt-v1.json',legacyRaw,'application/json');await page.waitForSelector('#legacyNotice:visible');
+  check(JSON.stringify(await saved())===converted,'Importing a v1 file waits for explicit conversion');
+  await page.locator('#removeFigure').click();await page.waitForFunction(()=>JSON.parse(localStorage.getItem('klappkarten-studio-project-v2')).figures.length===0);
+  await ready();check(await page.locator('#applyMotif').isDisabled(),'Empty cards remain saveable without a selected figure');
+  await page.locator('#addFigure').click();await page.waitForFunction(()=>JSON.parse(localStorage.getItem('klappkarten-studio-project-v2')).figures.length===1);await ready();
+  check(errors.length===0,'No browser exceptions: '+errors.join('; '));
+  return {passed:['four single-sheet examples and flat 180-degree view','motion state isolation','machine SVG download','hostile SVG and malformed project preservation','invalid input recovery','closure blocks export','Bezier/holes import and undo/redo','physical motif dimensions','dirty editor + property transaction','text outlines and reload','single-piece cut paths and card apertures','explicit undoable v1 migration with original preservation','empty-card recovery'],browserErrors:errors};
+  } finally { await context.close(); }
+}

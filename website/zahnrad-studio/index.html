@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><script src="../shared/problem-reporter.js"></script><link rel="stylesheet" href="../shared/problem-reporter.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Zwei passende Zahnräder gestalten, Speichen anpassen, den Eingriff ausprobieren und maßhaltige SVG-Schnittdateien herunterladen. Alles lokal im Browser.">
+<title>Zahnrad-Studio</title>
+<link rel="icon" href="data:,">
+<style>
+:root{color-scheme:light;--ink:#242b30;--muted:#70767a;--border:#dedfd9;--paper:#f6f6f0;--green:#24594b;--accent:#dceba2}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}button,input,select{font:inherit}button,a,input,select,summary{touch-action:manipulation}button{cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #7d9d33;outline-offset:3px}[hidden]{display:none!important}header{height:80px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 4.5vw;background:#fafaf6}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);font-size:18px;font-weight:650;letter-spacing:-.5px}.brand-icon{font-size:40px;line-height:1;color:var(--green)}.brand-light{font-weight:400;color:var(--muted)}.header-right{display:flex;align-items:center;gap:24px}.privacy{font-size:12px;color:var(--muted)}.privacy i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#658641;margin-right:7px}.text-button{border:0;background:none;color:var(--green);font-size:12px;padding:8px;text-decoration:none}.intro{display:flex;justify-content:space-between;align-items:center;margin:38px 0 28px}.eyebrow{font-size:10px;letter-spacing:2px;font-weight:650;color:var(--green)}h1{font-size:clamp(27px,3vw,42px);font-weight:550;line-height:1.2;letter-spacing:-1.5px;margin:10px 0}p{color:var(--muted)}.intro p{margin:0;font-size:14px}.edition{font:10px/1.7 ui-monospace,monospace;letter-spacing:1px;color:#90968c;border-left:1px solid #c8cdbf;padding-left:20px}main{max-width:1600px;margin:auto;padding:0 4.5vw}.workspace{display:grid;grid-template-columns:306px minmax(0,1fr);border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 10px 30px #26311e06}.controls{border-right:1px solid var(--border);background:#fdfdfb}.control-section{padding:22px;border-bottom:1px solid var(--border)}.control-section:last-child{border:0}h2{font-size:13px;margin:0 0 16px;font-weight:650;display:flex;gap:10px;align-items:center}h2>span{font:10px ui-monospace,monospace;color:#879077;border:1px solid #d9decf;border-radius:4px;padding:3px 4px}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 10px}.field-grid label,.select-label{font-size:10px;color:#666e70}.unit-field{display:flex;align-items:center;border:1px solid var(--border);border-radius:5px;margin-top:5px;background:white}.unit-field input{width:100%;min-width:0;border:0;background:transparent;padding:7px 8px;font-size:14px;color:var(--ink)}.unit-field span{font:10px ui-monospace,monospace;color:#969b94;padding-right:8px}select{margin-top:5px;width:100%;border:1px solid var(--border);padding:8px;background:white;border-radius:5px;font-size:12px;color:var(--ink)}.wide{grid-column:1/-1}.small{font-size:10px;line-height:1.6;margin:10px 0 0}.tabs{display:flex;gap:3px;background:#f0f1ea;padding:4px;border-radius:6px}.tabs button{border:none;background:none;border-radius:4px;font-size:11px;padding:7px 12px;color:var(--muted)}.tabs button[aria-pressed=true]{background:white;color:var(--green);box-shadow:0 1px 4px #0001;font-weight:650}.gear-tabs{margin-bottom:17px}.gear-tabs button{flex:1}.range-label{display:flex;justify-content:space-between;font-size:11px;margin-top:14px}.range-label output{font:11px ui-monospace,monospace;color:var(--green)}input[type=range]{accent-color:var(--green);width:100%;height:4px;margin:14px 0 6px;cursor:pointer}.primary,.secondary{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border:1px solid var(--border);border-radius:6px;font-size:11px;font-weight:550;background:white;color:var(--green)}.primary{background:var(--green);border-color:var(--green);color:white;margin-top:12px;justify-content:space-between}.primary span{font-size:18px}.primary:hover:not(:disabled){background:#1b493e}.secondary:hover:not(:disabled){background:#f0f3e9}.color-row{display:flex;align-items:center;gap:10px;font-size:11px;margin:14px 0}.color-row input{width:27px;height:27px;border:1px solid var(--border);padding:2px;background:white;border-radius:4px;cursor:pointer}.export-note{text-align:center;color:#969b94;font-size:9px;margin-top:9px}.stage{min-width:0;display:flex;flex-direction:column}.toolbar{display:flex;gap:12px;justify-content:space-between;align-items:center;padding:14px 22px;border-bottom:1px solid var(--border)}.guide-toggle{display:flex;align-items:center;gap:7px;font-size:10px;color:var(--muted);white-space:nowrap}input[type=checkbox]{accent-color:var(--green)}.status{padding:12px 24px;font-size:11px;background:#fafbf6;border-bottom:1px solid #e9ece1;color:#617340;min-height:42px}.status.error{color:#9b3925;background:#fff0e9}.canvas{position:relative;flex:1;min-height:480px;display:grid;place-items:center;background-color:#f5f5ef;background-image:radial-gradient(#cad0c1 .65px,transparent .65px);background-size:16px 16px;padding:25px 30px 48px;overflow:hidden}.canvas>svg{width:100%;height:100%;max-height:690px;min-height:360px;filter:drop-shadow(0 8px 12px #39442613)}.canvas-tag{position:absolute;bottom:17px;left:24px;font:8px ui-monospace,monospace;letter-spacing:1px;color:#79826a}.canvas-tag span{color:#a1a88f}.canvas-scale{position:absolute;bottom:17px;right:24px;font:10px ui-monospace,monospace;color:#79826a}.empty{position:absolute;text-align:center;padding:30px;max-width:340px;color:var(--muted);font-size:13px}.stage-footer{display:flex;flex-wrap:wrap;gap:30px;padding:20px 25px;border-top:1px solid var(--border);align-items:center;background:#fdfdfb}.stage-footer>div{display:flex;flex-direction:column}.metric{font-size:22px;letter-spacing:-.6px;line-height:1.25}.metric small{font-size:11px;color:var(--muted)}.metric-label{font-size:9px;color:var(--muted);margin-top:4px}.metric.good{color:var(--green)}.simulation-controls{display:grid;grid-template-columns:38px 1fr 1fr;gap:18px;align-items:center;padding:15px 24px;background:#edf2df;border-top:1px solid #d6dec3}.simulation-controls button{height:38px;padding:6px}.simulation-controls .range-label{margin-top:0}.simulation-controls input{margin-bottom:5px}.howto{margin:48px 0 35px}.howto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:45px;margin-top:25px}.howto article>span{font:9px ui-monospace,monospace;letter-spacing:1px;color:#99a28b}.howto h3{font-size:17px;letter-spacing:-.3px;font-weight:550;margin:8px 0}.howto p{font-size:12px;line-height:1.8;margin:0}details{margin-top:28px;border-top:1px solid var(--border);padding-top:17px;color:var(--muted);font-size:12px}summary{cursor:pointer;color:var(--green)}details p{margin-top:12px!important}footer{border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:20px;padding:22px 4.5vw;color:#8d9483;font-size:10px}footer a{color:var(--green);text-underline-offset:3px}noscript{display:block;padding:20px;color:#9b3925}.control-section input:disabled,.control-section select:disabled{opacity:.5}
+@media(min-width:1500px){.workspace{grid-template-columns:330px minmax(0,1fr)}}@media(max-width:1000px){main{padding:0 25px}.workspace{grid-template-columns:285px minmax(0,1fr)}.toolbar{padding:12px;flex-wrap:wrap}.stage-footer{gap:20px}.canvas{padding:15px 15px 48px;min-height:400px}.privacy,.edition{display:none}.howto-grid{gap:22px}}@media(max-width:720px){header{height:65px;padding:0 18px}.brand{font-size:15px}.brand-icon{font-size:32px}.header-right{gap:0}.header-right>a{display:none}main{padding:0 14px}.intro{margin:26px 6px 22px}h1{letter-spacing:-1px}.intro p{font-size:12px}.workspace{display:flex;flex-direction:column}.controls{border-right:0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr}.control-section{padding:16px}.control-section:nth-child(2){grid-row:span 2;border-left:1px solid var(--border)}.field-grid{gap:10px 7px}.unit-field input{padding:7px 5px;font-size:13px}.tabs button{padding:7px 10px}.canvas{min-height:330px}.canvas>svg{min-height:260px;max-height:440px}.canvas-tag{font-size:7px;left:15px}.canvas-scale{right:15px}.stage-footer{gap:22px;padding:17px 20px}.metric{font-size:19px}.simulation-controls{gap:12px;padding:12px}.howto-grid{grid-template-columns:1fr;gap:24px}.howto{padding:0 8px;margin-top:30px}footer{flex-direction:column;gap:7px;padding:18px 22px}}@media(max-width:390px){.controls{display:block}.control-section:nth-child(2){border-left:0}.toolbar .tabs{width:100%}.toolbar .tabs button{flex:1}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+.option-row{display:flex;align-items:flex-start;gap:7px;font-size:11px;color:var(--green);margin:14px 0}.option-row input{margin:3px 0 0;flex:none}.experimental-toggle{border-top:1px solid var(--border);padding-top:14px;margin-bottom:6px}.status.warning{color:#805c25;background:#fff6e1}.metric.warning{color:#946827}.workspace{overflow:visible}.controls{border-radius:12px 0 0 12px}.stage{position:sticky;top:16px;align-self:start;border-radius:0 12px 12px 0;overflow:hidden}.canvas{height:clamp(360px,52vh,620px);flex:none}.canvas>svg{min-height:0;max-height:100%}.tooth-note{padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--border)}.tooth-note output{color:var(--green);font-family:ui-monospace,monospace}.toolbar{flex-wrap:wrap}.zoom-tools{display:flex;gap:3px;align-items:center}.zoom-tools output{font:10px ui-monospace,monospace;color:var(--muted);text-align:center;min-width:32px}.zoom-tools .text-button{padding:5px 7px}.zoom-tools button{min-width:28px}@media(max-width:720px){.workspace{overflow:hidden}.stage{position:static;border-radius:0;align-self:stretch}.controls{border-radius:12px 12px 0 0}.canvas{height:340px}.canvas>svg{min-height:0}}
+</style>
+</head>
+<body data-app="zahnrad-studio">
+<header><a class="brand" href="../" aria-label="Zur Digitalen Werkstatt"><span class="brand-icon" aria-hidden="true">⚙</span><span>Zahnrad<span class="brand-light"> / Studio</span></span></a><div class="header-right"><span class="privacy"><i></i> Dein Entwurf bleibt im Browser</span><a class="text-button" href="../">Werkstatt ↗</a><button class="text-button" id="help">So funktioniert’s ↗</button></div></header>
+<main>
+<section class="intro" data-hero="zahnrad-studio"><div><div class="eyebrow" data-hero-eyebrow>AUS ZWEI RÄDERN WIRD BEWEGUNG</div><h1 data-hero-headline>Zahn für Zahn. Im Zusammenspiel.</h1><p data-hero-subline>Zahnräder gestalten, den Eingriff ausprobieren, mit dem Laser schneiden.</p></div><span class="edition">WERKZEUG № 05<br>ENTWURF → BEWEGUNG</span></section>
+<noscript>Bitte JavaScript aktivieren, um Zahnräder zu berechnen und SVG-Dateien zu exportieren.</noscript>
+<div class="workspace">
+<aside class="controls" aria-label="Zahnräder einstellen">
+<section class="control-section"><h2><span>01</span> Passendes Paar</h2><div class="field-grid">
+<label>Zahngröße · Modul<div class="unit-field"><input id="module" type="number" min="0.05" max="5" step="any" value="2"><span>mm</span></div></label>
+<label>Zahnspiel · gesamt<div class="unit-field"><input id="backlash" type="number" min="0" max="10" step="any" value="0.1"><span>mm</span></div></label>
+<label>Teilkreis · Zahnrad 1<div class="unit-field"><input id="pitchDiameter" type="number" min="0.9" max="7200" step="any" value="48"><span>mm</span></div></label>
+<label>Eingriffswinkel<div class="unit-field"><input id="pressureAngle" type="number" min="5" max="45" step="any" value="20"><span>°</span></div></label>
+<label class="wide">Materialsteg · Aussparungen<div class="unit-field"><input id="minWeb" type="number" min="0.1" max="20" step="0.1" value="1.5"><span>mm</span></div></label>
+</div><label class="option-row"><input id="keepDiameter" type="checkbox" checked> Radgröße 1 bei mehr Zähnen halten</label><label class="select-label" for="preset">Mit einer Teilung starten</label><select id="preset"><option value="standard">Standard · 24 / 36 Zähne</option><option value="fine">Fein · 240 / 360 Zähne</option><option value="veryFine">Sehr fein · 480 / 720 Zähne</option><option value="custom" disabled>Eigene Teilung</option></select><p class="small">Bei fester Radgröße ergeben mehr Zähne eine feinere Teilung. Zahngröße und Winkel gelten für beide Räder. Das Zahnspiel skaliert beim Ändern der Zahngröße mit.</p><label class="option-row experimental-toggle"><input id="experimental" type="checkbox"> Freie Zahnprofile erlauben</label><p class="small" id="modeNote">Eingriffsprüfung aktiv. Die Konturen bleiben in beiden Modi geschlossen und geometrisch gültig.</p></section>
+<section class="control-section"><h2><span>02</span> Räder gestalten</h2><div class="tabs gear-tabs" role="group" aria-label="Zahnrad auswählen"><button id="gear-tab-0" aria-pressed="true" aria-controls="gear-0" data-gear="0">Zahnrad 1</button><button id="gear-tab-1" aria-pressed="false" aria-controls="gear-1" data-gear="1">Zahnrad 2</button></div><div id="gear-0" aria-labelledby="gear-tab-0"></div><div id="gear-1" aria-labelledby="gear-tab-1" hidden></div></section>
+<section class="control-section"><h2><span>03</span> Für den Laser</h2><label class="select-label" for="exportTarget">SVG-Ausgabe</label><select id="exportTarget"><option value="pair">Beide Räder · Schnittlayout</option><option value="gear1">Nur Zahnrad 1</option><option value="gear2">Nur Zahnrad 2</option></select><label class="color-row"><input id="cutColor" type="color" value="#ff0000"><span>Schnittfarbe · alle Konturen</span></label><button class="secondary" id="reset">↻ &nbsp; Startwerte wiederherstellen</button><button class="primary" id="download" disabled>SVG herunterladen <span aria-hidden="true">↓</span></button><div class="export-note">Originalgröße · Millimeter · geschlossene Konturen</div><p class="small">Nominale Maße ohne Schnittfugenkompensation. Die Schnittfuge stellst du in deiner Lasersoftware ein.</p></section>
+</aside>
+<section class="stage" aria-label="Vorschau und Drehprobe">
+<div class="toolbar"><div class="tabs" role="group" aria-label="Ansicht"><button data-view="pair" aria-pressed="true">Zahnradpaar</button><button data-view="simulation" aria-pressed="false">Drehprobe</button><button data-view="cut" aria-pressed="false">Schnittlayout</button></div><div class="zoom-tools" role="group" aria-label="Zähne vergrößern"><button id="zoomOut" class="text-button" aria-label="Ansicht verkleinern" disabled>−</button><output id="zoomValue">1×</output><button id="zoomIn" class="text-button" aria-label="Zähne vergrößern" disabled>+</button><button id="zoomFit" class="text-button" disabled>Einpassen</button></div><label class="guide-toggle"><input id="guides" type="checkbox" checked> Teilkreise &amp; Achsen</label></div>
+<div id="status" class="status" role="status" aria-live="polite">Zahnräder werden vorbereitet …</div>
+<div class="canvas"><svg id="preview" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Vorschau des Zahnradpaars" viewBox="-40 -50 150 100"></svg><div id="empty" class="empty" hidden>Bitte die Einstellungen korrigieren. Danach erscheint dein neuer Entwurf hier.</div><div class="canvas-tag">ZAHNRAD-STUDIO <span id="viewTag">/ ZAHNRADPAAR</span></div><div class="canvas-scale" id="canvasScale">MAẞE IN MM</div></div>
+<div class="simulation-controls" id="simulationControls" hidden><button class="secondary" id="play" aria-label="Drehprobe abspielen" aria-pressed="false" disabled>▶</button><div><label class="range-label" for="angle">Winkel · Rad 1 <output id="angleValue">0°</output></label><input id="angle" type="range" min="0" max="360" step="0.1" value="0" disabled></div><div><label class="range-label" for="speed">Tempo <output id="speedValue">6 U/min</output></label><input id="speed" type="range" min="1" max="30" step="1" value="6"></div></div>
+<div class="stage-footer"><div><span class="metric" id="diameters">—</span><span class="metric-label">Außendurchmesser · mm</span></div><div><span class="metric" id="distance">—</span><span class="metric-label">Achsabstand · mm</span></div><div><span class="metric good" id="ratio">—</span><span class="metric-label">Übersetzung · Rad 2 : Rad 1</span></div><div><span class="metric good" id="quality">—</span><span class="metric-label">Geometrieprüfung</span></div></div>
+</section>
+</div>
+<section class="howto" id="howto"><div class="eyebrow">VOM ENTWURF ZUM ERSTEN DREH</div><div class="howto-grid"><article><span>1 / GESTALTEN</span><h3>Fein, flach oder spitz.</h3><p>Halte den Teilkreisdurchmesser von Rad 1 fest und erhöhe die Zähnezahl für feinere Zähne. Die Zahnhöhe und die Endform stellst du pro Rad ein. Standard, flach, spitz, rund und abgeschrägt stehen zur Wahl.</p></article><article><span>2 / AUSPROBIEREN</span><h3>Bewegung sichtbar machen.</h3><p>Die Drehprobe bewegt beide Räder entsprechend ihrer Zähnezahlen. Im Standardmodus wird der Eingriff geprüft. Freie Zahnprofile lassen auch experimentelle Formen mit Hinweisen zu; deren reale Bewegung ist nicht bestätigt.</p></article><article><span>3 / HERSTELLEN</span><h3>Erst innen. Dann außen.</h3><p>Das Schnittlayout trennt beide Räder mit 5 mm Abstand. SVG im Maßstab 1:1 importieren. Erst Achsenlöcher und Aussparungen, danach Außenkonturen schneiden. Sehr feine Zähne hängen von der Auflösung deines Lasers ab: einen Probeschnitt machen.</p></article></div><details><summary>Zahnhöhe, freies Profil und Geometrieprüfung</summary><p>Die Zahnhöhe gibt an, wie weit ein Zahn über den Teilkreis ragt. 100 % entsprechen einer Modulhöhe. Ein kleinerer Wert ergibt flache Zähne, ohne die Teilung zu ändern. Die Fußtiefe des Gegenrads passt sich an. Bei spitzen, runden und abgeschrägten Enden bestimmt der Formanteil, wie viel des oberen Zahns umgeformt wird; dadurch kann die wirksame Zahnflanke kürzer werden.</p><p>Der Eingriffswinkel gilt für beide Räder und kann zwischen 5° und 45° liegen. Nicht jede Kombination aus Winkel, Höhe und Zähnezahl ergibt einen stetigen Eingriff. Mit „Freie Zahnprofile erlauben“ kannst du solche Entwürfe trotzdem exportieren. Hinweise auf zu geringe Überdeckung oder Kollisionen bleiben sichtbar und werden in der SVG vermerkt. Ungültige, sich selbst überschneidende oder zu dünne Grundkonturen bleiben gesperrt.</p><p>Das Zahnspiel ist der zusätzliche Abstand zwischen den Zahnflanken am Teilkreis. Es wird gleichmäßig auf beide Räder verteilt und beim Skalieren des Moduls proportional angepasst. Die Schnittfuge beschreibt dagegen das vom Laser entfernte Material. Sie wird separat in der Lasersoftware kompensiert.</p><p>Die Zahnflanken sind Evolventen ohne Profilverschiebung. Unterhalb des Grundkreises werden sie radial zum Fußkreis fortgesetzt. Kurven werden mit höchstens 0,005 mm beziehungsweise 0,0025 × Modul Abweichung angenähert; es gilt der kleinere Wert. Der minimale Materialsteg betrifft Nabe, Rand und Speichen; Zahnspitzen werden separat geprüft.</p><p>Geprüft werden Konturen, Materialstege, zulässiger Kontaktbereich, Überdeckungsgrad und der Eingriff an mehreren Positionen eines Zahnzyklus. Die Drehprobe ist ideal synchronisiert und keine Physiksimulation. Materialfestigkeit, Achspassung und reale Bewegung erfordern einen Probeschnitt und einen Aufbau. Teilkreise und Achsenmarkierungen sind ausschließlich Vorschauhilfen.</p></details></section>
+</main><footer><span>Entworfen für neugierige Hände.</span><a href="../drehscheiben-studio/">Zum Drehscheiben-Studio ↗</a><span>Lokale Verarbeitung · Keine Uploads · Version 1.1</span></footer>
+<script type="module">
+import {defaults,buildModel,exportSVG,pathData,placement} from './geometry.mjs?v=1.1';
+const $=id=>document.getElementById(id),ns='http://www.w3.org/2000/svg';
+let options=structuredClone(defaults),model=null,view='pair',angle=0,frame=0,lastTime=0,timer=0,referenceDiameter=48,zoomLevel=1;
+let movingGroups=[];
+window.WorkshopReports?.register({
+ capture:()=>({document:options,response:model,ui:{view,angle,referenceDiameter,zoomLevel,selectedGear:document.querySelector('[data-gear][aria-pressed="true"]')?.dataset.gear},pending:{debounced:!!timer,animating:!!frame}}),
+ preview:()=>$('preview')
+});
+const numericFields=[['teeth','Zähnezahl','',18,720,1],['toothHeight','Zahnhöhe über Teilkreis','%',5,150,1],['bore','Achsenloch','mm',0,500,.1],['hub','Nabendurchmesser','mm',.1,600,.1],['rim','Randbreite','mm',.1,100,.1],['spokes','Speichenanzahl','',3,24,1],['spokeWidth','Speichenbreite','mm',.1,100,.1]];
+// Only fixed field definitions produce markup; input values enter SVG through numeric geometry.
+for(let i=0;i<2;i++){
+  $( `gear-${i}` ).innerHTML='<div class="field-grid">'+numericFields.map(([key,label,unit,min,max,step])=>`<label>${label}<div class="unit-field"><input data-key="${key}" data-index="${i}" id="g${i}-${key}" type="number" min="${min}" max="${max}" step="${step}"><span>${unit}</span></div></label>`).join('')+`<label class="wide">Zahnende<select data-key="tipStyle" data-index="${i}" id="g${i}-tipStyle"><option value="standard">Standard · Kreisabschluss</option><option value="flat">Flach</option><option value="pointed">Spitz</option><option value="rounded">Rund</option><option value="chamfered">Abgeschrägt</option></select></label></div><div class="tooth-note" id="g${i}-tipAmountRow"><label class="range-label" for="g${i}-tipAmount">Formanteil am Zahnkopf <output id="g${i}-tipAmountValue">35 %</output></label><input data-key="tipAmount" data-index="${i}" id="g${i}-tipAmount" type="range" min="0" max="100" step="1"></div><p class="small tooth-note">Zahnhöhe: <output id="g${i}-heightValue">2 mm</output>. 100 % entsprechen einer Modulhöhe.</p><label class="select-label">Speichenform<select data-key="style" data-index="${i}" id="g${i}-style"><option value="solid">Vollscheibe</option><option value="straight">Gerade Speichen</option><option value="curved">Geschwungene Speichen</option></select></label><div id="g${i}-bendRow"><label class="range-label" for="g${i}-bend">Biegungswinkel <output id="g${i}-bendValue">20°</output></label><input data-key="bend" data-index="${i}" id="g${i}-bend" type="range" min="0" max="40" step="1"></div><p class="small">Nabe und Rand halten die Speichen zusammen. Das Achsenloch darf 0 mm sein.</p>`;
+}
+function syncFields(){
+  for(const key of ['module','backlash','minWeb','cutColor','pressureAngle'])$(key).value=options[key];
+  $('experimental').checked=options.experimental;
+  for(let i=0;i<2;i++)for(const [key,value] of Object.entries(options.gears[i]))$(`g${i}-${key}`).value=['toothHeight','tipAmount'].includes(key)?value*100:value;
+  updateDimensions();
+  updateDisabled();
+}
+function updateDimensions(){
+  $('pitchDiameter').value=Number.isFinite(referenceDiameter)?Number(referenceDiameter.toPrecision(8)):'';
+  for(let i=0;i<2;i++)$(`g${i}-heightValue`).textContent=number(options.module*options.gears[i].toothHeight)+' mm';
+}
+function setModule(value){
+  if(Number.isFinite(value)&&Number.isFinite(options.module)&&options.module>0)options.backlash*=value/options.module;
+  options.module=value;
+  $('module').value=Number.isFinite(value)?Number(value.toPrecision(8)):'';
+  $('backlash').value=Number.isFinite(options.backlash)?Number(options.backlash.toPrecision(8)):'';
+}
+function updateDisabled(){
+  for(let i=0;i<2;i++){
+    const solid=options.gears[i].style==='solid';
+    for(const key of ['hub','rim','spokes','spokeWidth'])$(`g${i}-${key}`).disabled=solid;
+    $(`g${i}-bendRow`).hidden=options.gears[i].style!=='curved';
+    $(`g${i}-bend`).disabled=options.gears[i].style!=='curved';
+    $(`g${i}-bendValue`).textContent=options.gears[i].bend+'°';
+    const trimmed=!['standard','flat'].includes(options.gears[i].tipStyle);
+    $(`g${i}-tipAmountRow`).hidden=!trimmed;$(`g${i}-tipAmount`).disabled=!trimmed;
+    $(`g${i}-tipAmountValue`).textContent=number(options.gears[i].tipAmount*100)+' %';
+  }
+  $('modeNote').textContent=options.experimental?'Freier Entwurf: Auch Profile mit Eingriffshinweisen sind exportierbar. Die reale Bewegung ist nicht bestätigt.':'Eingriffsprüfung aktiv. Die Konturen bleiben in beiden Modi geschlossen und geometrisch gültig.';
+}
+function status(message,error=false,warning=false){if(error)window.WorkshopReports?.record('error',message,{phase:'studio'});$('status').textContent=message;$('status').classList.toggle('error',error);$('status').classList.toggle('warning',!error&&warning);}
+function pause(){cancelAnimationFrame(frame);frame=0;lastTime=0;$('play').textContent='▶';$('play').setAttribute('aria-label','Drehprobe abspielen');$('play').setAttribute('aria-pressed','false');}
+function invalidate(){
+  pause();model=null;movingGroups=[];$('download').disabled=true;$('play').disabled=true;$('angle').disabled=true;
+  for(const id of ['zoomIn','zoomOut','zoomFit'])$(id).disabled=true;
+  $('preview').replaceChildren();$('empty').hidden=false;
+  for(const key of ['diameters','distance','ratio','quality'])$(key).textContent='—';
+  $('canvasScale').textContent='MAẞE IN MM';
+}
+function svgEl(name,attrs,parent=$('preview')){const el=document.createElementNS(ns,name);for(const [key,value] of Object.entries(attrs))el.setAttribute(key,value);parent.appendChild(el);return el;}
+function borePath(radius){return radius?`M ${-radius} 0 A ${radius} ${radius} 0 1 0 ${radius} 0 A ${radius} ${radius} 0 1 0 ${-radius} 0 Z`:'';}
+function render(){
+  $('simulationControls').hidden=view!=='simulation';
+  $('viewTag').textContent='/ '+({pair:'ZAHNRADPAAR',simulation:'DREHPROBE',cut:'SCHNITTLAYOUT'}[view]);
+  $('preview').replaceChildren();movingGroups=[];
+  if(!model?.valid)return;
+  const arrangement=placement(model,view==='cut'?'cut':'pair',angle),b=arrangement.bounds,pad=Math.max(b.width,b.height)*.09;
+  const center=b.x+b.width/2,focus=arrangement.entries[0].x+model.gears[0].pitchRadius,cx=center+(focus-center)*(1-1/zoomLevel),cy=b.y+b.height/2;
+  const width=(b.width+2*pad)/zoomLevel,height=(b.height+2*pad)/zoomLevel;
+  $('preview').setAttribute('viewBox',`${cx-width/2} ${cy-height/2} ${width} ${height}`);
+  $('zoomValue').textContent=zoomLevel+'×';$('zoomIn').disabled=zoomLevel>=64;$('zoomOut').disabled=zoomLevel<=1;$('zoomFit').disabled=zoomLevel<=1;
+  $('preview').setAttribute('aria-label',view==='cut'?'Schnittlayout mit zwei getrennten Zahnrädern':'Zwei ineinandergreifende Zahnräder');
+  const outlineStroke=Math.min(.22,options.module*.11),guideStroke=Math.min(.15,options.module*.075);
+  for(const item of arrangement.entries){
+    const g=svgEl('g',{transform:`translate(${item.x} ${item.y}) rotate(${item.angle*180/Math.PI})`}),gear=item.gear;
+    if(view==='cut'){
+      for(const points of gear.windows)svgEl('path',{d:pathData(points),fill:'none',stroke:options.cutColor,'stroke-width':guideStroke},g);
+      if(gear.bore)svgEl('circle',{r:gear.bore/2,fill:'none',stroke:options.cutColor,'stroke-width':guideStroke},g);
+      svgEl('path',{d:pathData(gear.outline),fill:'none',stroke:options.cutColor,'stroke-width':guideStroke},g);
+    }else{
+      svgEl('path',{d:[pathData(gear.outline),...gear.windows.map(points=>pathData(points)),borePath(gear.bore/2)].join(' '),fill:item.index===0?'#fffdf4':'#e3ebd5',stroke:'#24594b','stroke-width':outlineStroke,'fill-rule':'evenodd','stroke-linejoin':'round'},g);
+    }
+    if($('guides').checked){
+      svgEl('circle',{r:gear.pitchRadius,fill:'none',stroke:'#8a9876','stroke-width':guideStroke,'stroke-dasharray':'1 1.5','pointer-events':'none'},g);
+      svgEl('path',{d:'M-2 0 H2 M0 -2 V2',stroke:'#8a9876','stroke-width':outlineStroke,'pointer-events':'none'},g);
+    }
+    movingGroups.push({el:g,...item});
+  }
+  $('canvasScale').textContent=view==='cut'?'5 mm ABSTAND':`${number(model.metrics.centerDistance)} mm ACHSABSTAND`;
+}
+const decimal=new Intl.NumberFormat('de-DE',{maximumFractionDigits:5});
+const number=value=>decimal.format(value);
+const gcd=(a,b)=>b?gcd(b,a%b):a;
+function generate(){
+  clearTimeout(timer);timer=0;invalidate();
+  try{
+    const bad=[...document.querySelectorAll('.controls input,.controls select')].find(el=>!el.disabled&&!el.checkValidity());
+    if(bad){status('Bitte einen gültigen Wert für „'+(bad.closest('label')?.childNodes[0]?.textContent?.trim()||'Einstellungen')+'“ eingeben.',true);return;}
+    const next=buildModel(options);
+    if(!next.valid){status(next.errors.join(' '),true);return;}
+    model=next;$('empty').hidden=true;$('download').disabled=false;$('play').disabled=false;$('angle').disabled=false;
+    $('diameters').textContent=model.gears.map(g=>number(2*g.tipRadius)).join(' / ');
+    $('distance').textContent=number(model.metrics.centerDistance);
+    const z=options.gears.map(g=>g.teeth),factor=gcd(...z);$('ratio').textContent=`${z[1]/factor} : ${z[0]/factor}`;
+    $('quality').textContent=options.experimental?'Freier Entwurf':'Geprüft';
+    $('quality').classList.toggle('warning',options.experimental);
+    const summary=`${options.experimental?'Freier Entwurf':'Passendes Paar'} · ${z[0]} / ${z[1]} Zähne · Überdeckungsgrad ${number(Math.round(model.metrics.contactRatio*100)/100)}`;
+    status(summary+' · '+(options.experimental?(model.warnings?.join(' ')||'Reale Bewegung nicht bestätigt. Export als experimentelles Profil.'):'bereit zum Export'),false,options.experimental);
+    render();
+  }catch(error){invalidate();status(error.message||'Der Entwurf konnte nicht berechnet werden. Bitte die Einstellungen prüfen.',true);}
+}
+document.querySelector('.controls').addEventListener('input',event=>{
+  const el=event.target;if(!el.matches('input,select')||['exportTarget','keepDiameter','preset'].includes(el.id))return;
+  let value=el.type==='checkbox'?el.checked:el.type==='color'||el.tagName==='SELECT'?el.value:el.valueAsNumber;
+  if(el.dataset.key){
+    const index=Number(el.dataset.index),key=el.dataset.key;
+    if(['toothHeight','tipAmount'].includes(key))value/=100;
+    options.gears[index][key]=value;
+    if(index===0&&key==='teeth'&&Number.isFinite(value)&&value>0){
+      if($('keepDiameter').checked)setModule(referenceDiameter/value);
+      else referenceDiameter=options.module*value;
+    }
+  }else if(el.id==='pitchDiameter'){
+    referenceDiameter=value;setModule(value/options.gears[0].teeth);
+  }else if(el.id==='module'){
+    setModule(value);referenceDiameter=value*options.gears[0].teeth;
+  }else options[el.id]=value;
+  if(el.dataset.key==='teeth'||['module','pitchDiameter'].includes(el.id))$('preset').value='custom';
+  updateDimensions();updateDisabled();queueGeneration();
+});
+function queueGeneration(){clearTimeout(timer);timer=0;invalidate();status('Entwurf wird geprüft …');timer=setTimeout(generate,160);}
+$('preset').addEventListener('change',()=>{
+  const counts={standard:[24,36],fine:[240,360],veryFine:[480,720]}[$('preset').value];
+  for(let i=0;i<2;i++)Object.assign(options.gears[i],{teeth:counts[i],toothHeight:1,tipStyle:'standard',tipAmount:.35});
+  setModule(referenceDiameter/counts[0]);syncFields();generate();
+});
+for(const button of document.querySelectorAll('[data-gear]'))button.addEventListener('click',()=>{
+  const index=Number(button.dataset.gear);
+  for(let i=0;i<2;i++){$(`gear-${i}`).hidden=i!==index;$(`gear-tab-${i}`).setAttribute('aria-pressed',String(i===index));}
+});
+for(const button of document.querySelectorAll('[data-view]'))button.addEventListener('click',()=>{
+  pause();view=button.dataset.view;
+  for(const b of document.querySelectorAll('[data-view]'))b.setAttribute('aria-pressed',String(b===button));render();
+});
+$('guides').addEventListener('change',render);
+$('zoomIn').addEventListener('click',()=>{zoomLevel=Math.min(64,zoomLevel*2);render();});
+$('zoomOut').addEventListener('click',()=>{zoomLevel=Math.max(1,zoomLevel/2);render();});
+$('zoomFit').addEventListener('click',()=>{zoomLevel=1;render();});
+function updateAngle(){
+  const degrees=(angle*180/Math.PI)%360;
+  $('angle').value=degrees;$('angleValue').textContent=number(Math.round(degrees*10)/10)+'°';
+  if(!model||view==='cut')return;
+  const entries=placement(model,'pair',angle).entries;
+  for(let i=0;i<movingGroups.length;i++){const p=entries[i];movingGroups[i].el.setAttribute('transform',`translate(${p.x} ${p.y}) rotate(${p.angle*180/Math.PI})`);}
+}
+$('angle').addEventListener('input',()=>{pause();angle=$('angle').valueAsNumber*Math.PI/180;updateAngle();});
+$('speed').addEventListener('input',()=>{$('speedValue').textContent=$('speed').value+' U/min';});
+function tick(time){
+  if(!model||view!=='simulation'){pause();return;}
+  // Keep the accumulated rotation: wrapping the driver would make the other wheel's spokes jump.
+  if(lastTime)angle+=Math.min(time-lastTime,100)/1000*Number($('speed').value)*Math.PI/30;
+  lastTime=time;updateAngle();frame=requestAnimationFrame(tick);
+}
+$('play').addEventListener('click',()=>{
+  if(frame){pause();return;}if(!model||view!=='simulation')return;
+  $('play').textContent='Ⅱ';$('play').setAttribute('aria-label','Drehprobe pausieren');$('play').setAttribute('aria-pressed','true');frame=requestAnimationFrame(tick);
+});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
+$('reset').addEventListener('click',()=>{options=structuredClone(defaults);angle=0;zoomLevel=1;referenceDiameter=defaults.module*defaults.gears[0].teeth;$('keepDiameter').checked=true;$('preset').value='standard';$('exportTarget').value='pair';syncFields();updateAngle();generate();});
+$('download').addEventListener('click',()=>{
+  if(!model?.valid)return;
+  try{
+    const target=$('exportTarget').value,text=exportSVG(model,target),blob=new Blob([text],{type:'image/svg+xml'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+    const name=target==='pair'?`${options.gears[0].teeth}-${options.gears[1].teeth}-Schnittlayout`:target==='gear1'?`${options.gears[0].teeth}-Zahnrad-1`:`${options.gears[1].teeth}-Zahnrad-2`;
+    a.href=url;a.download=`Zahnrad-Studio-${name}.svg`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }catch(error){invalidate();status(error.message,true);}
+});
+$('help').addEventListener('click',()=>{$('howto').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});});
+syncFields();generate();
+</script>
+<script type="module" src="../shared/hero-copy.mjs"></script></body>
+</html>

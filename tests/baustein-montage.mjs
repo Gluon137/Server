@@ -1,0 +1,28 @@
+import assert from 'node:assert/strict';
+import {assemblyOperations,panelOffset,assemblyInstruction} from '../website/baustein-studio/montage.mjs';
+
+const panels=['panel-001','panel-002','panel-003'].map(id=>({id,axis:'x',sign:1,omitted:false}));
+const childA={panelIds:['panel-001'],translation:[-10,20,0],steps:[]};
+const childB={panelIds:['panel-002'],translation:[0,0,15],steps:[]};
+const group={panelIds:['panel-001','panel-002'],translation:[100,100,0],steps:[childA,childB]};
+const last={panelIds:['panel-003'],translation:[0,0,-50],steps:[]};
+const tree={panels,assembly:['panel-001','panel-002','panel-003'],assemblySteps:[group,last]};
+const operations=assemblyOperations(tree);
+assert.equal(operations.length,4,'Timeline includes internal construction before group insertion');
+assert.deepEqual(operations.map(op=>op.kind),['preassembly','preassembly','group','panel']);
+assert.deepEqual(panelOffset(operations,'panel-001',0),[90,120,0]);
+assert.deepEqual(panelOffset(operations,'panel-001',1),[100,100,0]);
+assert.deepEqual(panelOffset(operations,'panel-002',2),[100,100,0]);
+assert.deepEqual(panelOffset(operations,'panel-001',2.5),[50,50,0]);
+assert.deepEqual(panelOffset(operations,'panel-002',2.5),[50,50,0],'Members move together during insertion');
+for(const panel of panels)assert.deepEqual(panelOffset(operations,panel.id,4),[0,0,0]);
+assert.match(assemblyInstruction(operations,0),/vormontieren.*diagonal/);
+assert.match(assemblyInstruction(operations,2),/Baugruppe P01 \+ P02 gemeinsam diagonal/);
+assert.match(assemblyInstruction(operations,2),/−X 100 mm, −Y 100 mm/);
+assert.match(assemblyInstruction(operations,4),/Montage abgeschlossen/);
+assert.deepEqual(assemblyOperations({...tree,assemblyOperations:operations}),operations);
+const legacy=assemblyOperations({panels,assemblySteps:[{panelId:'panel-001',axis:'x',sign:-1,distance:25}]});
+assert.deepEqual(legacy[0].translation,[-25,0,0]);
+assert.throws(()=>assemblyOperations({...tree,assemblyOperations:[{panelIds:['unknown'],translation:[1,0,0]}]}));
+assert.throws(()=>assemblyOperations({...tree,assemblyOperations:[{panelIds:['panel-001'],translation:[NaN,0,0]}]}));
+console.log('OK: recursive preassembly, simultaneous diagonal offsets, group motion, operation instructions and legacy compatibility');

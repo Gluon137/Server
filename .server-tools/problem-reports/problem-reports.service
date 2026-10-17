@@ -1,0 +1,30 @@
+[Unit]
+Description=Studio problem report archive
+After=network.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+WorkingDirectory=/opt/problem-reports
+StateDirectory=problem-reports
+StateDirectoryMode=0700
+ExecStart=/usr/bin/python3 /opt/problem-reports/server.py --port 8770 --data-dir /var/lib/problem-reports --public-origin https://v2202606364772466585.supersrv.de
+Restart=on-failure
+RestartSec=3
+Environment=PYTHONDONTWRITEBYTECODE=1
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+MemoryMax=1G
+CPUQuota=100%
+TasksMax=32
+LimitNOFILE=128
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

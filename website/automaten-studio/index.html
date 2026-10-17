@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Baue deinen eigenen Holzautomaten: Kurbeln, Exzenter und Hebel ausprobieren, Figuren zeichnen und maßhaltige SVG-Schnittteile exportieren.">
+<title>Automaten-Studio · Digitale Werkstatt</title>
+<link rel="icon" href="data:,">
+<script src="../shared/problem-reporter.js"></script>
+<link rel="stylesheet" href="../shared/problem-reporter.css">
+<link rel="stylesheet" href="./style.css">
+<script type="module" src="../shared/hero-copy.mjs"></script>
+<script type="module" src="./app.mjs"></script>
+</head>
+<body data-app="automaten-studio">
+<header><a class="brand" href="../" aria-label="Zur Digitalen Werkstatt"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="15" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="20" r="3" fill="currentColor"/><path d="M20 20L29 11H35" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="29" cy="11" r="3" fill="#d6e4af" stroke="currentColor"/></svg><span>Automaten<span class="brand-light"> / Studio</span></span></a><div class="header-links"><span class="local-note"><i></i> Dein Entwurf bleibt im Browser</span><a href="../">Werkstatt ↗</a><a href="#anleitung">So funktioniert’s ↗</a></div></header>
+<main>
+<section class="intro" data-hero="automaten-studio"><div><div class="eyebrow" data-hero-eyebrow>KLEINE MECHANIK. GROSSE GESCHICHTEN.</div><h1 data-hero-headline>Eine Kurbel. Dein kleines Theater.</h1><p data-hero-subline>Erfinde eine Figur, gib ihr Bewegung und bring sie auf die Werkbank.</p></div><div class="edition">DREHEN → STAUNEN → BAUEN<br>HOLZ · ACHSEN · EIN GUTER EINFALL</div></section>
+<noscript>Bitte JavaScript aktivieren, um den Automaten zu gestalten und Schnittdateien zu exportieren.</noscript>
+<div class="workspace">
+<aside class="controls" aria-label="Automat gestalten">
+<section class="control-section"><h2><span>01</span> Die Bewegung</h2>
+<label class="field">Mechanik<select id="mechanism" data-path="mechanism.type"><option value="slider">Kurbel &amp; Schubstange</option><option value="eccentric">Exzenter &amp; Kulisse</option><option value="lever">Kurbel &amp; Kipphebel</option></select></label>
+<p id="mechanismDescription" class="small"></p>
+<div class="field-grid">
+<label class="field">Kurbelradius<div class="unit-field"><input id="radius" data-path="mechanism.radius" type="number" min="6" max="50" step="1"><span>mm</span></div></label>
+<label class="field" data-types="slider">Stangenlänge<div class="unit-field"><input id="rodLength" data-path="mechanism.rodLength" type="number" min="15" max="250" step="1"><span>mm</span></div></label>
+<label class="field" data-types="eccentric">Scheibenradius<div class="unit-field"><input id="eccentricRadius" data-path="mechanism.eccentricRadius" type="number" min="10" max="100" step="1"><span>mm</span></div></label>
+<label class="field" data-types="lever">Achsenabstand<div class="unit-field"><input id="ground" data-path="mechanism.ground" type="number" min="20" max="250" step="1"><span>mm</span></div></label>
+<label class="field" data-types="lever">Koppelstange<div class="unit-field"><input id="coupler" data-path="mechanism.coupler" type="number" min="15" max="250" step="1"><span>mm</span></div></label>
+<label class="field" data-types="lever">Hebellänge<div class="unit-field"><input id="rocker" data-path="mechanism.rocker" type="number" min="15" max="250" step="1"><span>mm</span></div></label>
+</div></section>
+<section class="control-section"><h2><span>02</span> Die Hauptfigur</h2>
+<label class="field">Figur auswählen<select id="figurePreset"><option value="bird">Ein Vogel hebt ab</option><option value="wave">Eine Figur winkt</option><option value="flower">Eine Blume tanzt</option><option value="custom">Eigener Umriss</option></select></label>
+<div class="field-grid"><label class="field">Breite<div class="unit-field"><input id="figureWidth" data-path="figure.width" type="number" min="15" max="250" step="1"><span>mm</span></div></label><label class="field">Höhe<div class="unit-field"><input id="figureHeight" data-path="figure.height" type="number" min="15" max="250" step="1"><span>mm</span></div></label></div>
+<div class="color-row"><input type="color" id="figureColor" data-path="figure.color" aria-label="Vorschaufarbe der Figur"><span>Farbe in der Vorschau</span></div>
+<div class="button-pair"><button id="editContour" type="button">Umriss bearbeiten</button><button id="drawNew" type="button">Neu zeichnen ＋</button></div><p class="small">Dein Umriss wird ein Schnittteil. Die Klebestelle verbindet ihn mit dem bewegten Träger.</p>
+</section>
+<section class="control-section"><h2><span>03</span> Holz &amp; Passung</h2><div class="field-grid">
+<label class="field">Materialstärke<div class="unit-field"><input id="thickness" data-path="material.thickness" type="number" min="2" max="6" step="0.1"><span>mm</span></div></label><label class="field">Rundstab, gemessen<div class="unit-field"><input id="dowel" data-path="material.dowel" type="number" min="3" max="10" step="0.1"><span>mm</span></div></label>
+<label class="field">Laufloch-Zugabe<div class="unit-field"><input id="running" data-path="material.running" type="number" min="0.05" max="1" step="0.05"><span>mm</span></div></label><label class="field">Klebeloch-Zugabe<div class="unit-field"><input id="glue" data-path="material.glue" type="number" min="-0.5" max="0.5" step="0.05"><span>mm</span></div></label>
+<label class="field">Axiales Spiel<div class="unit-field"><input id="axial" data-path="material.axial" type="number" min="0.1" max="1" step="0.1"><span>mm</span></div></label><label class="field">Führungsspiel<div class="unit-field"><input id="slide" data-path="material.slide" type="number" min="0.1" max="1" step="0.1"><span>mm</span></div></label>
+</div><p class="small">Zugaben beziehen sich auf den Durchmesser. Erst das Teststück schneiden, Passung wählen, dann den Automaten fertigen.</p></section>
+<section class="control-section"><h2><span>04</span> Auf die Werkbank</h2><div class="field-grid"><label class="field">Bogenbreite<div class="unit-field"><input id="sheetWidth" data-path="layout.width" type="number" min="50" max="2000" step="1"><span>mm</span></div></label><label class="field">Bogenhöhe<div class="unit-field"><input id="sheetHeight" data-path="layout.height" type="number" min="50" max="2000" step="1"><span>mm</span></div></label><label class="field">Teileabstand<div class="unit-field"><input id="sheetGap" data-path="layout.gap" type="number" min="1" max="30" step="1"><span>mm</span></div></label><label class="field">Schnittbogen<select id="sheetSelect" aria-label="Schnittbogen auswählen"></select></label></div>
+<button class="primary" type="button" id="downloadSVG" disabled>Schnittbogen herunterladen <span>↓</span></button><div class="button-pair"><button type="button" id="downloadParts" disabled>Teileliste ↓</button><button type="button" id="downloadAssembly" disabled>Bauanleitung ↓</button></div><p class="export-note">SVG · Millimeter · nominale Maße<br>Schnittfuge einmal in der Lasersoftware korrigieren.</p>
+<div class="project-actions"><button type="button" id="saveProject">Projekt speichern ↓</button><button type="button" id="openProject">Projekt öffnen ↑</button><input id="projectFile" type="file" accept=".json,application/json" hidden></div><p id="saveStatus" class="small" role="status">Automatische Sicherung im Browser</p></section>
+</aside>
+<section class="stage" aria-label="Vorschau und Prüfung">
+<div class="toolbar"><div class="tabs" aria-label="Ansicht"><button type="button" data-view="motion" aria-pressed="true">Bewegung</button><button type="button" data-view="cut" aria-pressed="false">Schnittteile</button></div><div class="view-toggles"><label><input type="checkbox" id="showFrame" checked> Gestell</label><label><input type="checkbox" id="showAxes" checked> Achsen</label></div></div>
+<p id="status" class="status" role="status" aria-live="polite">Dein Automat wird vorbereitet …</p><div id="errors" class="errors" role="alert" hidden></div>
+<div class="canvas"><svg id="scene" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bewegungsvorschau des Automaten"></svg><div class="canvas-tag"><span class="live-dot"></span> <span id="viewCaption">SEITENANSICHT · BAUEBENEN</span></div><div class="canvas-scale">Alle Maße in mm</div></div>
+<div class="simulation-controls"><button type="button" id="play" aria-label="Bewegung starten" aria-pressed="false">▶</button><label>Stellung <output id="angleValue" for="angle">0°</output><input id="angle" type="range" min="0" max="360" value="0" step="0.5"></label><label>Tempo <output id="speedValue" for="speed">12 U/min</output><input id="speed" type="range" min="1" max="40" value="12" step="1"></label></div>
+<div class="stage-metrics"><div><strong id="movementMetric">—</strong><span id="movementLabel">Hub</span></div><div><strong id="partsMetric">—</strong><span>Schnittteile inkl. Passungstest</span></div><div><strong id="sheetsMetric">—</strong><span>Materialbögen</span></div><span class="material-badge">HOLZ + LEIM<br>DEINE KLEINE MASCHINE</span></div>
+<div id="checks" class="checks" aria-live="polite"></div><div class="legend"><span><i class="wood"></i> Gestell &amp; Führung</span><span><i class="mechanism"></i> Bewegte Mechanik</span><span><i class="figure"></i> Deine Figur</span></div>
+</section>
+</div>
+<section id="anleitung" class="howto"><div class="eyebrow">VOM ERSTEN DREH ZUM EIGENEN AUTOMATEN</div><div class="howto-grid"><article><span>01 / ENTWERFEN</span><h2>Was soll sich bewegen?</h2><p>Wähle eine Mechanik und verändere ihren Hub oder Hebel. Nimm eine Figurvorlage oder zeichne deinen eigenen Umriss. Die markierte Klebestelle braucht rundherum 6 mm Platz.</p></article><article><span>02 / AUSPROBIEREN</span><h2>Einmal im Kreis denken.</h2><p>Drehe die Kurbel am Bildschirm. Die Vorschau zeigt dieselben Teile wie der Schnittbogen. Beweglichkeit und abgetastete Kollisionsprüfung werden getrennt ausgewiesen.</p></article><article><span>03 / BAUEN</span><h2>Jetzt wird’s handgemacht.</h2><p>Schneide zuerst den Passungstest. Lade Schnittbögen, Teileliste und Bauanleitung herunter. Verleime nur die gekennzeichneten Stellen; Lager und Gelenke müssen frei bleiben.</p></article></div><details><summary>Was die Vorschau prüft – und was der Probeschnitt zeigt</summary><p>Die Kinematik verwendet starre Teile mit idealen Gelenken. Stichproben sind kein vollständiger Kollisionsnachweis. Reibung, Holzverzug, Klebung, Verschleiß und die tatsächliche Passung müssen am Werkstück geprüft werden. Die Vorlagen sind geometrisch berechnet und noch nicht als physische Bausätze erprobt. Die Schnittdateien enthalten nominale Geometrie ohne Schnittfugenkorrektur.</p></details></section>
+</main><footer><span>Digitale Werkstatt / Automaten-Studio</span><a href="../">Weitere Ideen für deine Werkbank ↗</a></footer>
+<dialog id="figureDialog" aria-labelledby="drawingTitle"><div class="dialog-heading"><div><div class="eyebrow">DEINE FIGUR · EIN GESCHLOSSENER UMRISS</div><h2 id="drawingTitle">Punkt für Punkt zur eigenen Form.</h2></div><button id="cancelDrawing" type="button" aria-label="Zeichnen abbrechen">✕</button></div><p id="drawingHelp">Klicke für neue Punkte; ziehe Punkte zum Verschieben. Mit Tastatur: Pfeiltasten bewegen den Cursor, Enter setzt Punkte. Tab wählt vorhandene Punkte, Pfeiltasten verschieben sie.</p><div class="drawing-toolbar"><button id="anchorMode" type="button" aria-pressed="false">Klebestelle setzen</button><button id="deletePoint" type="button">Punkt löschen</button><span id="pointCount">0 / 256 Punkte</span></div><svg id="drawingSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="group" aria-label="Figurenumriss bearbeiten" aria-describedby="drawingHelp drawingStatus" tabindex="0"></svg><p id="drawingStatus" role="status" aria-live="polite"></p><div class="dialog-footer"><span>Die gestrichelte Fläche wird mit dem Träger verleimt.</span><button class="primary" id="closeContour" type="button">Kontur schließen &amp; übernehmen ✓</button></div></dialog>
+</body>
+</html>

@@ -1,0 +1,28 @@
+[Unit]
+Description=Kästchen-Studio manufacturing service
+After=network.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+WorkingDirectory=/opt/box-studio
+ExecStart=/opt/box-studio/venv/bin/python /opt/box-studio/website/box-studio/backend/server.py --port 8767 --public-origin https://v2202606364772466585.supersrv.de
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+MemoryMax=1G
+CPUQuota=200%
+TasksMax=64
+Environment=OPENBLAS_NUM_THREADS=1
+Environment=OMP_NUM_THREADS=1
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

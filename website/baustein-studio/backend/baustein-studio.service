@@ -1,0 +1,24 @@
+[Unit]
+Description=Baustein-Studio Schnittberechnung
+After=network.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+WorkingDirectory=/opt/baustein-studio
+ExecStart=/opt/baustein-studio/venv/bin/python /opt/baustein-studio/website/baustein-studio/backend/server.py --port 8766 --public-origin https://v2202606364772466585.supersrv.de
+Environment=PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+MemoryMax=1G
+CPUQuota=100%
+TasksMax=32
+LimitNOFILE=1024
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

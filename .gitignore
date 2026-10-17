@@ -1,0 +1,69 @@
+# Zugangsdaten und lokale Authentifizierung
+[Cc]redentials*
+.env
+.env.*
+*.env
+workshop-zugang.json
+/set-terraria-password.sh
+*.pem
+*.key
+*.p12
+*.pfx
+.htpasswd*
+id_rsa
+id_ed25519
+.ssh/
+.aws/
+
+# Nur die geprüften Deployment- und Dienstdateien aufnehmen.
+/.server-tools/*
+!/.server-tools/deploy-*.py
+!/.server-tools/problem-reports/
+/.server-tools/problem-reports/*
+!/.server-tools/problem-reports/server.py
+!/.server-tools/problem-reports/README.md
+!/.server-tools/problem-reports/*.service
+!/.server-tools/problem-reports/*.conf
+
+# Lokale Abhängigkeiten und Caches
+.venv/
+venv/
+*-venv/
+/.baustein-deps/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+node_modules/
+# SVG-Edit importiert diese mitgelieferte Browserbibliothek direkt.
+!/website/klappkarten-studio/vendor/svgedit/extensions/node_modules/
+/website/klappkarten-studio/vendor/svgedit/extensions/node_modules/*
+!/website/klappkarten-studio/vendor/svgedit/extensions/node_modules/browser-fs-access/
+
+# Erzeugte Testausgaben und lokale Arbeitsdateien
+/.playwright-cli/
+/output/
+.DS_Store
+*.swp
+*.tmp
+*~
+
+# Backups, Bestandsaufnahmen und Laufzeitdaten
+backup/
+backups/
+logs/
+*.log
+*.bak
+*.backup
+*.tgz
+*.tar.gz
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+/server-bestand-*.txt
+/ILIAS-Schule-Lernmodul-SCORM12.zip
+/terraria/config/
+/terraria/worlds/

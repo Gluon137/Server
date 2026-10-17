@@ -1,0 +1,97 @@
+// Execute with Playwright CLI run-code; every mutation belongs to a fresh context.
+export default async function checkSurfaceWorkspace(rootPage,base='http://127.0.0.1:8766') {
+ const context=await rootPage.context().browser().newContext({viewport:{width:1560,height:1080}}),page=await context.newPage(),errors=[],passed=[],key='klappkarten-studio-project-v2';let stage='startup';
+ page.on('pageerror',error=>errors.push(error.message));
+ const check=(condition,message)=>{if(!condition)throw new Error(message);};
+ const saved=()=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
+ const serialized=async()=>JSON.stringify(await saved());
+ const ready=async()=>{await page.waitForFunction(()=>document.body.dataset.ready==='true'&&!document.querySelector('#downloadSVG').disabled&&!document.querySelector('#surfaceCanvas')?.__surfaceEditor?.busy);await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));};
+ const changed=before=>page.waitForFunction(({key,before})=>JSON.stringify(JSON.parse(localStorage.getItem(key)))!==before,{key,before});
+ const mutate=async action=>{const before=await serialized();await action();await changed(before);await ready();return saved();};
+ const field=async(id,value)=>{await page.locator('#'+id).fill(String(value));await page.locator('#'+id).blur();};
+ const tool=name=>page.locator(`[data-surface-tool="${name}"]`).click();
+ const position=point=>page.locator('#surfaceCanvas').evaluate((host,point)=>host.__surfaceEditor.projectPoint(point),point);
+ const click=async point=>{await page.locator('#surfaceCanvas').scrollIntoViewIfNeeded();const p=await position(point);await page.mouse.click(p.x,p.y);};
+ const draw=async(type,points)=>{stage='draw '+type+' '+JSON.stringify(points);await tool(type);const before=await serialized();for(const point of points)await click(point);if(type==='polygon')await page.locator('#surfaceCanvas canvas').press('Enter');await changed(before);await ready();return saved();};
+ const load=async example=>mutate(async()=>{await page.locator('#example').selectOption(example);await page.locator('#loadExample').click();});
+ const download=async id=>{const promise=page.waitForEvent('download');await page.locator('#'+id).click();const file=await promise;let content='';for await(const chunk of await file.createReadStream())content+=chunk.toString('utf8');return content;};
+ const upload=content=>page.evaluate(content=>{const input=document.querySelector('#projectFile'),data=new DataTransfer();data.items.add(new File([content],'space-card.json',{type:'application/json'}));input.files=data.files;input.dispatchEvent(new Event('change',{bubbles:true}));},content);
+ try {
+  await page.goto(base+'/klappkarten-studio/');await ready();
+  await page.evaluate(()=>{window.surfaceEvents=[];for(const type of ['pointerdown','pointerup','click','keydown'])document.addEventListener(type,event=>{if(event.target.closest?.('#surfaceNet'))surfaceEvents.push({type,target:event.target.dataset.surface,connected:event.target.isConnected});},true);});
+  check(await page.locator('#view-surface').isVisible()&&await page.locator('#surfaceCanvas canvas').count()===1,'New projects open directly in the spatial workspace.');
+  await load('surface-blank');await field('surfaceOffset',20);
+  let p=await draw('rectangle',[[15,0],[40,30]]),first=p.surface.shapes[0].id;
+  check(JSON.stringify(p.surface.shapes[0].contours)==='[[[15,0],[40,0],[40,30],[15,30]]]','Actual 3D rectangle clicks preserve millimetre coordinates.');
+  check(await page.locator('#surfaceNet path[data-surface]').count()>0,'Drawing creates the live cut and crease net.');
+  await field('surfaceOffset',30);p=await draw('polygon',[[60,0],[85,0],[85,25],[70,40],[60,25]]);const second=p.surface.shapes.at(-1).id;
+  check(p.surface.shapes[0].offset===20&&p.surface.shapes[1].offset===30,'Moving the drawing plane affects new surfaces and retains existing depths.');
+  await page.locator('#surfaceOrientation').selectOption('horizontal');await field('surfaceOffset',20);
+  p=await draw('rectangle',[[105,0],[135,25]]);const third=p.surface.shapes.at(-1).id;
+  check(p.surface.shapes.at(-1).orientation==='horizontal'&&p.surface.shapes.at(-1).offset===20,'Horizontal drawing records a terrace on its actual height plane.');
+  passed.push('Primary spatial workspace; true projected vertical rectangle/polygon and horizontal terrace; movable drawing planes generate a live net.');
+  stage='linked selection';await page.locator('#surfaceList').selectOption(first);await page.waitForFunction(id=>document.querySelector('#surfaceCanvas').__surfaceEditor.selection===id,first);
+  await mutate(()=>field('surfaceSelectedOffset',25));
+  check((await saved()).surface.shapes[0].offset===25&&await page.locator('#surfaceOffset').inputValue()==='25','Moving a selected surface updates both model and drawing plane.');
+  let selectedBefore=await serialized();
+  // The next pointerdown commits this focused field and replaces the SVG.
+  await page.locator('#surfaceSelectedOffset').fill('27');
+  const netPath=page.locator(`#surfaceNet [data-surface="${second}"][data-surface-fill]`).first();
+  await netPath.scrollIntoViewIfNeeded();
+  const netPosition=await netPath.evaluate(node=>{const box=node.getBBox(),p=new DOMPoint(box.x+box.width/2,box.y+box.height/2).matrixTransform(node.getScreenCTM());return {x:p.x,y:p.y};});
+  stage='2D net selection '+JSON.stringify(await page.evaluate(position=>({position,target:document.elementFromPoint(position.x,position.y)?.outerHTML.slice(0,500)}),netPosition));await page.mouse.click(netPosition.x,netPosition.y);await page.waitForFunction(id=>document.querySelector('#surfaceList').value===id,second,{timeout:5000});
+  await ready();check((await saved()).surface.shapes[0].offset===27,'Selecting a net surface also completes a pending native property change.');selectedBefore=await serialized();
+  check(await page.locator(`#surfaceNet [data-surface="${second}"][data-selected="true"]`).count()>0,'Clicking the net selects the associated 3D surface.');
+  await tool('select');
+  const firstInside=await page.locator('#surfaceCanvas').evaluate((host,id)=>{const editor=host.__surfaceEditor,shape=editor.shapes.find(s=>s.id===id),p=editor.world([25,15],shape.orientation,shape.offset).project(editor.view.camera),rect=editor.canvas.getBoundingClientRect();return {x:rect.left+(p.x+1)*rect.width/2,y:rect.top+(1-p.y)*rect.height/2};},first);
+  stage='3D face selection';await page.mouse.click(firstInside.x,firstInside.y);await page.waitForFunction(id=>document.querySelector('#surfaceList').value===id,first);
+  check(await serialized()===selectedBefore,'Linked 2D/3D selection does not alter manufacturing geometry.');
+  stage='vertex drag';const a=await position([15,30]),b=await position([10,35]),beforeDrag=await serialized();
+  await page.mouse.move(a.x,a.y);await page.mouse.down();await page.mouse.move(b.x,b.y,{steps:5});await page.mouse.up();await changed(beforeDrag);await ready();
+  check(JSON.stringify((await saved()).surface.shapes[0].contours[0][3])==='[10,35]','Dragging a 3D vertex edits its exact original contour.');
+  const afterDrag=await serialized();await mutate(()=>page.locator('#undo').click());check(await serialized()===beforeDrag,'One undo restores a vertex drag.');await mutate(()=>page.locator('#redo').click());check(await serialized()===afterDrag,'One redo restores the edited contour.');
+  passed.push('Selected depth editing; live net-to-3D and 3D-to-net selection; original vertex dragging with exact undo/redo.');
+  stage='angle and draft boundaries';for(const angle of [0,45,90,135,180]){await page.locator('#surfaceAngle').fill(String(angle));await page.locator('#surfaceAngle').dispatchEvent('input');await page.waitForFunction(angle=>document.querySelector('#surfaceAngleValue').textContent===angle+'°',angle);}
+  check(await serialized()===afterDrag,'Opening angle never mutates the fabrication model.');await page.locator('#surfaceEditPose').click();
+  await field('surfaceOffset',15);await page.locator('#surfaceOrientation').selectOption('vertical');await tool('polygon');
+  const beforeDraft=await serialized();await click([45,0]);
+  check(await page.locator('#downloadSVG').isDisabled(),'Incomplete polygon locks machine export.');
+  await page.locator('#tab-layout').click();await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('offene Fläche'));
+  check(await page.locator('#view-surface').isVisible()&&await serialized()===beforeDraft&&await page.locator('#surfaceCanvas').evaluate(host=>host.__surfaceEditor.draft.points.length)===1,'An incomplete draft refuses navigation and retains every point.');
+  await page.locator('#surfaceCanvas canvas').press('Escape');await ready();
+  await tool('polygon');await click([45,0]);await click([55,0]);await click([50,15]);
+  await page.locator('#tab-layout').click();await page.waitForSelector('#view-layout:visible');await changed(beforeDraft);await ready();
+  check((await saved()).surface.shapes.length===4,'Navigating completes a valid pending polygon exactly once.');
+  await mutate(()=>page.locator('#undo').click());check(await serialized()===beforeDraft,'Auto-finishing on a view change records one history action.');await mutate(()=>page.locator('#redo').click());
+  await page.locator('#tab-surface').click();await page.waitForSelector('#view-surface:visible');
+  passed.push('Opening animation preserves manufacturing data; incomplete drafts remain recoverable; valid drafts commit once across views.');
+  stage='property target during draft flush';await page.locator('#surfaceList').selectOption(first);await tool('polygon');
+  const beforePropertyDraft=await serialized();await click([138,0]);await click([145,0]);await click([140,10]);
+  await field('surfaceName','Bearbeitete Fassade');await changed(beforePropertyDraft);await ready();
+  p=await saved();check(p.surface.shapes.find(shape=>shape.id===first).name==='Bearbeitete Fassade'&&p.surface.shapes.at(-1).name!=='Bearbeitete Fassade','Editing the selected property after drawing another draft still targets the originally selected surface.');
+  await mutate(()=>page.locator('#undo').click());await mutate(()=>page.locator('#undo').click());check(await serialized()===beforePropertyDraft,'Property action and draft finish retain separate undo boundaries.');
+  passed.push('A property edit retains its original selected target while flushing another pending surface.');
+  stage='save/export/reload';const json=await download('saveProject'),valid=await serialized();check(JSON.stringify(JSON.parse(json))===valid,'Project download preserves editable surface source.');
+  const svg=await download('downloadSVG');
+  const machine=await page.evaluate(source=>{const doc=new DOMParser().parseFromString(source,'image/svg+xml');return {invalid:!!doc.querySelector('parsererror'),width:doc.documentElement.getAttribute('width'),groups:['CUT','FOLD_MOUNTAIN','FOLD_VALLEY','ENGRAVE'].every(id=>doc.getElementById(id)),finite:[...doc.querySelectorAll('path')].every(path=>!/(?:NaN|Infinity)/.test(path.getAttribute('d'))),ids:[...doc.querySelectorAll('path[data-surface]')].map(path=>path.dataset.surface)};},svg);
+  check(!machine.invalid&&machine.width.endsWith('mm')&&machine.groups&&machine.finite,'Machine download contains finite millimetre paths in the four operation groups.');
+  check(!/stroke-dasharray|data-preview-only|<(?:script|text|image)\b/.test(svg),'Machine download has no editor overlays or explanatory dashed lines.');
+  await page.reload();await ready();check(await serialized()===valid&&await page.locator('#view-surface').isVisible(),'Autosave reload restores the complete spatial source.');
+  await load('surface-blank');await mutate(()=>upload(json));check(await serialized()===valid,'JSON import round-trips every original surface.');
+  const invalid=JSON.parse(valid);invalid.surface.shapes[0].offset='invalid';await upload(JSON.stringify(invalid));await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('Projekt nicht geladen'));check(await serialized()===valid,'Rejected project import preserves the last valid construction.');
+  passed.push('Editable JSON, autosave reload, import round trip and malformed import preservation; mm SVG with separate solid manufacturing operations.');
+  stage='legacy restoration';await load('animals');const legacy=await saved(),original=JSON.stringify(legacy.figures);
+  check(!legacy.surface?.active&&legacy.figures.length===3,'Loading an old project preserves its previous source representation.');
+  await page.locator('#tab-surface').click();check(await page.locator('#surfaceReadOnly').isVisible(),'Legacy spatial overview explains its read-only state.');
+  await mutate(()=>page.locator('#startSurface').click());check((await saved()).surface.active&&JSON.stringify((await saved()).figures)===original,'Starting a spatial design preserves the old editable motifs.');
+  await draw('rectangle',[[20,0],[40,25]]);const spatial=JSON.stringify((await saved()).surface.shapes);
+  await mutate(()=>page.locator('#surfaceLegacy').click());check(!(await saved()).surface.active&&JSON.stringify((await saved()).figures)===original,'Returning to the old design restores its original model.');
+  await page.locator('#tab-surface').click();await mutate(()=>page.locator('#resumeSurface').click());
+  check(JSON.stringify((await saved()).surface.shapes)===spatial&&JSON.stringify((await saved()).figures)===original,'Resuming the spatial design restores its source shapes and retains the previous motif model.');
+  await mutate(()=>page.locator('#surfaceLegacy').click());
+  await page.reload();await ready();check(!(await saved()).surface.active&&JSON.stringify((await saved()).figures)===original,'Restoring an older project after reload never silently activates spatial mode.');
+  passed.push('Older project source stays intact through spatial editing, explicit return, and autosave restoration.');
+  check(!errors.length,'Browser errors: '+errors.join('; '));return {passed,browserErrors:errors};
+ } catch(error) {const state=await page.evaluate(()=>({status:document.querySelector('#status')?.textContent,errors:document.querySelector('#errors')?.textContent,selection:document.querySelector('#surfaceList')?.value,events:window.surfaceEvents,draft:document.querySelector('#surfaceCanvas')?.__surfaceEditor?.draft,stored:localStorage.getItem('klappkarten-studio-project-v2')}));throw new Error(stage+': '+error.message+' '+JSON.stringify(state));}
+ finally {await context.close();}
+}
