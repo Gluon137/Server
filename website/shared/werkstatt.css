@@ -1,0 +1,128 @@
+/* Digitale Werkstatt: gemeinsame Gestaltungsgrundlage für Startseite und Studios.
+   Studio-Stylesheets laden danach und verwenden die Variablen statt eigener Farbwerte. */
+
+/* Tokens */
+:root{
+  color-scheme:light;
+  --ws-paper:#f5f5ef;--ws-paper-deep:#ecede4;--ws-surface:#fff;--ws-surface-soft:#fbfbf8;--ws-surface-sunk:#f1f2eb;
+  --ws-ink:#1e2622;--ws-ink-soft:#38423d;--ws-muted:#5c665f;--ws-faint:#646e65;
+  --ws-line:#dde1d6;--ws-line-strong:#c4cbbb;
+  --ws-green:#24594b;--ws-green-strong:#173d33;--ws-green-soft:#e4ecdc;--ws-green-tint:#f1f5ea;
+  --ws-lime:#8da442;--ws-lime-soft:#e9f0d4;
+  --ws-ok:#2e6a3c;--ws-warn:#8a5a14;--ws-warn-soft:#fbf1dc;--ws-danger:#9c3621;--ws-danger-soft:#fcebe3;
+  --ws-focus:#6f8a2c;
+  --ws-font:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --ws-mono:ui-monospace,'SF Mono','Cascadia Mono','JetBrains Mono',Menlo,Consolas,monospace;
+  --ws-text-xs:12px;--ws-text-sm:13px;--ws-text-md:15px;--ws-text-lg:17px;
+  --ws-radius-sm:7px;--ws-radius:11px;--ws-radius-lg:16px;--ws-radius-xl:24px;
+  --ws-shadow-sm:0 1px 2px #17241c12;
+  --ws-shadow:0 1px 2px #17241c0d,0 10px 28px -12px #17241c2e;
+  --ws-shadow-lg:0 2px 6px #17241c0f,0 28px 64px -24px #17241c4d;
+  --ws-bar-h:60px;
+  --ws-ease:cubic-bezier(.2,.7,.2,1);
+  /* Studio-Akzent; jedes Studio setzt eigene Werte über data-app. */
+  --ws-accent:var(--ws-green);--ws-accent-soft:var(--ws-green-soft);--ws-accent-ink:var(--ws-green-strong);
+}
+[data-app=automaten-studio],[data-studio=automaten-studio]{--ws-accent:#b5653a;--ws-accent-soft:#f6e5d8;--ws-accent-ink:#7c3f1f}
+[data-app=baustein-studio],[data-studio=baustein-studio]{--ws-accent:#3d6f9e;--ws-accent-soft:#e0ebf5;--ws-accent-ink:#244a6e}
+[data-app=drehscheiben-studio],[data-studio=drehscheiben-studio]{--ws-accent:#6f8a2c;--ws-accent-soft:#ebf1d6;--ws-accent-ink:#465a16}
+[data-app=box-studio],[data-studio=box-studio]{--ws-accent:#9a7432;--ws-accent-soft:#f3ead7;--ws-accent-ink:#664a19}
+[data-app=klappkarten-studio],[data-studio=klappkarten-studio]{--ws-accent:#b1546b;--ws-accent-soft:#f7e2e6;--ws-accent-ink:#7a2d40}
+[data-app=zahnrad-studio],[data-studio=zahnrad-studio]{--ws-accent:#45788a;--ws-accent-soft:#deedf1;--ws-accent-ink:#265566}
+[data-studio=limescope]{--ws-accent:#5f7d1f;--ws-accent-soft:#eaf1d9;--ws-accent-ink:#3d5310}
+[data-studio=workshop-zuordnung]{--ws-accent:#6a5a9b;--ws-accent-soft:#ebe7f6;--ws-accent-ink:#45386f}
+
+/* Grundlagen */
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:calc(var(--ws-bar-h) + 16px)}
+body{margin:0;background:var(--ws-paper);color:var(--ws-ink);font:var(--ws-text-md)/1.55 var(--ws-font);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button,input,select,textarea{font:inherit;color:inherit}
+:where(a,button,input,select,textarea,summary,[tabindex]):focus-visible{outline:3px solid var(--ws-focus);outline-offset:2px}
+::selection{background:var(--ws-lime-soft);color:var(--ws-ink)}
+.ws-icon{width:1.25em;height:1.25em;flex:none;display:inline-block;vertical-align:-.25em}
+.ws-visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* Sprunglink */
+.ws-skip{position:absolute;left:12px;top:-60px;z-index:1100;background:var(--ws-green);color:#fff;padding:10px 14px;border-radius:var(--ws-radius-sm);font-weight:600;text-decoration:none;transition:top .15s}
+.ws-skip:focus{top:10px}
+
+/* Kopfleiste */
+.ws-bar{position:sticky;top:0;z-index:900;height:var(--ws-bar-h);display:flex;align-items:center;gap:12px;padding:0 clamp(14px,2.4vw,28px);background:var(--ws-paper);background:color-mix(in srgb,var(--ws-paper) 86%,transparent);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--ws-line)}
+.ws-brand{display:inline-flex;align-items:center;gap:10px;color:var(--ws-ink);text-decoration:none;font-weight:650;font-size:15px;letter-spacing:-.2px;white-space:nowrap;border-radius:var(--ws-radius-sm);min-height:40px;padding:6px 4px;margin-left:-4px}
+.ws-brand .ws-icon{width:22px;height:22px;color:var(--ws-lime)}
+.ws-brand:hover{color:var(--ws-green)}
+.ws-crumb{color:var(--ws-line-strong);font-size:18px;font-weight:300;user-select:none}
+.ws-bar-actions{margin-left:auto;display:flex;align-items:center;gap:6px;min-width:0}
+.ws-local{display:inline-flex;align-items:center;gap:7px;color:var(--ws-muted);font-size:var(--ws-text-sm);white-space:nowrap;padding:0 8px}
+.ws-local::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--ws-lime);box-shadow:0 0 0 3px var(--ws-lime-soft)}
+.ws-link{display:inline-flex;align-items:center;gap:6px;color:var(--ws-green);font-size:var(--ws-text-sm);font-weight:550;text-decoration:none;padding:8px 10px;border-radius:var(--ws-radius-sm);white-space:nowrap}
+.ws-link:hover{background:var(--ws-green-tint)}
+
+/* Studio-Umschalter */
+.ws-switcher{position:relative}
+.ws-switcher>summary{list-style:none;display:inline-flex;align-items:center;gap:9px;cursor:pointer;padding:6px 10px 6px 6px;border-radius:var(--ws-radius);font-weight:650;font-size:15px;letter-spacing:-.2px;color:var(--ws-ink);white-space:nowrap;user-select:none}
+.ws-switcher>summary::-webkit-details-marker{display:none}
+.ws-switcher>summary:hover,.ws-switcher[open]>summary{background:var(--ws-surface);box-shadow:var(--ws-shadow-sm),inset 0 0 0 1px var(--ws-line)}
+.ws-switcher>summary .ws-chevron{width:16px;height:16px;color:var(--ws-faint);transition:transform .2s var(--ws-ease)}
+.ws-switcher[open]>summary .ws-chevron{transform:rotate(180deg)}
+.ws-studio-mark{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--ws-accent-soft);color:var(--ws-accent-ink)}
+.ws-studio-mark .ws-icon{width:19px;height:19px}
+.ws-menu{position:absolute;left:0;top:calc(100% + 8px);width:min(340px,calc(100vw - 24px));padding:8px;background:var(--ws-surface);border:1px solid var(--ws-line);border-radius:var(--ws-radius-lg);box-shadow:var(--ws-shadow-lg);z-index:950;animation:ws-pop .16s var(--ws-ease)}
+.ws-menu ul{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.ws-menu li a{display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:var(--ws-radius);color:var(--ws-ink);text-decoration:none}
+.ws-menu li a>.ws-icon{width:34px;height:34px;padding:7px;border-radius:9px;background:var(--ws-accent-soft);color:var(--ws-accent-ink)}
+.ws-menu li a>span{display:grid;line-height:1.3;min-width:0}
+.ws-menu li a strong{font-size:14px;font-weight:600}
+.ws-menu li a small{font-size:var(--ws-text-xs);color:var(--ws-muted)}
+.ws-menu li a:hover{background:var(--ws-surface-sunk)}
+.ws-menu li a[aria-current=page]{background:var(--ws-green-tint);box-shadow:inset 0 0 0 1px var(--ws-green-soft)}
+.ws-menu li a[aria-current=page] strong::after{content:' · hier';font-weight:400;color:var(--ws-muted)}
+.ws-draft-dot{margin-left:auto;font-style:normal;font-size:12px;font-weight:600;color:var(--ws-green);background:var(--ws-green-tint);border:1px solid var(--ws-green-soft);padding:1px 7px;border-radius:99px}
+.ws-menu-all{display:block;margin-top:6px;padding:10px;border-top:1px solid var(--ws-line);color:var(--ws-green);font-size:var(--ws-text-sm);font-weight:550;text-decoration:none;border-radius:0 0 var(--ws-radius) var(--ws-radius)}
+.ws-menu-all:hover{text-decoration:underline;text-underline-offset:3px}
+
+.ws-switcher:not([open]) .ws-menu{display:none}
+@keyframes ws-pop{from{opacity:0;transform:translateY(-4px) scale(.98)}}
+
+/* Schaltflächen */
+.ws-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:10px 18px;border-radius:var(--ws-radius);border:1px solid var(--ws-line-strong);background:var(--ws-surface);color:var(--ws-green);font-size:15px;font-weight:600;text-decoration:none;cursor:pointer;transition:background .15s,border-color .15s,transform .15s var(--ws-ease),box-shadow .15s}
+.ws-btn:hover{border-color:var(--ws-green);box-shadow:var(--ws-shadow-sm)}
+.ws-btn:active{transform:translateY(1px)}
+.ws-btn--primary{background:var(--ws-green);border-color:var(--ws-green);color:#fff;box-shadow:0 1px 0 #ffffff26 inset,0 6px 16px -8px #173d3399}
+.ws-btn--primary:hover{background:var(--ws-green-strong);border-color:var(--ws-green-strong)}
+.ws-btn .ws-icon{width:18px;height:18px}
+
+/* Kompakter Studio-Einstieg über der Werkbank */
+.ws-studio-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:22px 0 18px}
+.ws-studio-intro .eyebrow,.ws-eyebrow{font:650 var(--ws-text-xs)/1.4 var(--ws-font);letter-spacing:.12em;text-transform:uppercase;color:var(--ws-accent-ink)}
+.ws-studio-intro h1{font-size:clamp(24px,2.3vw,32px);line-height:1.15;letter-spacing:-.025em;font-weight:650;margin:6px 0 4px;text-wrap:balance}
+.ws-studio-intro p{margin:0;color:var(--ws-muted);font-size:var(--ws-text-md);max-width:70ch}
+
+/* Problemmeldung: siehe problem-reporter.css */
+
+/* Fußzeile */
+.ws-footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 24px;padding:24px clamp(14px,2.4vw,28px) 88px;border-top:1px solid var(--ws-line);color:var(--ws-muted);font-size:var(--ws-text-sm)}
+.ws-footer a{color:var(--ws-green);text-decoration:none;font-weight:550}
+.ws-footer a:hover{text-decoration:underline;text-underline-offset:3px}
+
+@media (max-width:720px){
+  :root{--ws-bar-h:56px}
+  .ws-local{display:none}
+  .ws-bar .ws-brand>span{display:none}
+  .ws-switcher>summary{font-size:14px}
+  .ws-menu{position:fixed;left:10px;right:10px;top:calc(var(--ws-bar-h) + 6px);width:auto;max-height:calc(100dvh - var(--ws-bar-h) - 20px);overflow:auto}
+}
+@media (max-width:520px){
+  .ws-bar-actions .ws-link{display:none}
+  .ws-switcher{min-width:0}
+  .ws-switcher>summary{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+}
+@media (max-width:380px){
+  .ws-crumb{display:none}
+  .ws-bar .ws-brand{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+@media print{.ws-bar,.ws-footer,#problem-report-button{display:none!important}}

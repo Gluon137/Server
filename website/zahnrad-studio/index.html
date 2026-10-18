@@ -4,20 +4,192 @@
 <meta charset="utf-8"><script src="../shared/problem-reporter.js"></script><link rel="stylesheet" href="../shared/problem-reporter.css">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Zwei passende Zahnräder gestalten, Speichen anpassen, den Eingriff ausprobieren und maßhaltige SVG-Schnittdateien herunterladen. Alles lokal im Browser.">
-<title>Zahnrad-Studio</title>
+<title>Zahnrad-Studio · Digitale Werkstatt</title>
 <link rel="icon" href="data:,">
+<link rel="stylesheet" href="../shared/werkstatt.css">
 <style>
-:root{color-scheme:light;--ink:#242b30;--muted:#70767a;--border:#dedfd9;--paper:#f6f6f0;--green:#24594b;--accent:#dceba2}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}button,input,select{font:inherit}button,a,input,select,summary{touch-action:manipulation}button{cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #7d9d33;outline-offset:3px}[hidden]{display:none!important}header{height:80px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 4.5vw;background:#fafaf6}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);font-size:18px;font-weight:650;letter-spacing:-.5px}.brand-icon{font-size:40px;line-height:1;color:var(--green)}.brand-light{font-weight:400;color:var(--muted)}.header-right{display:flex;align-items:center;gap:24px}.privacy{font-size:12px;color:var(--muted)}.privacy i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#658641;margin-right:7px}.text-button{border:0;background:none;color:var(--green);font-size:12px;padding:8px;text-decoration:none}.intro{display:flex;justify-content:space-between;align-items:center;margin:38px 0 28px}.eyebrow{font-size:10px;letter-spacing:2px;font-weight:650;color:var(--green)}h1{font-size:clamp(27px,3vw,42px);font-weight:550;line-height:1.2;letter-spacing:-1.5px;margin:10px 0}p{color:var(--muted)}.intro p{margin:0;font-size:14px}.edition{font:10px/1.7 ui-monospace,monospace;letter-spacing:1px;color:#90968c;border-left:1px solid #c8cdbf;padding-left:20px}main{max-width:1600px;margin:auto;padding:0 4.5vw}.workspace{display:grid;grid-template-columns:306px minmax(0,1fr);border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 10px 30px #26311e06}.controls{border-right:1px solid var(--border);background:#fdfdfb}.control-section{padding:22px;border-bottom:1px solid var(--border)}.control-section:last-child{border:0}h2{font-size:13px;margin:0 0 16px;font-weight:650;display:flex;gap:10px;align-items:center}h2>span{font:10px ui-monospace,monospace;color:#879077;border:1px solid #d9decf;border-radius:4px;padding:3px 4px}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 10px}.field-grid label,.select-label{font-size:10px;color:#666e70}.unit-field{display:flex;align-items:center;border:1px solid var(--border);border-radius:5px;margin-top:5px;background:white}.unit-field input{width:100%;min-width:0;border:0;background:transparent;padding:7px 8px;font-size:14px;color:var(--ink)}.unit-field span{font:10px ui-monospace,monospace;color:#969b94;padding-right:8px}select{margin-top:5px;width:100%;border:1px solid var(--border);padding:8px;background:white;border-radius:5px;font-size:12px;color:var(--ink)}.wide{grid-column:1/-1}.small{font-size:10px;line-height:1.6;margin:10px 0 0}.tabs{display:flex;gap:3px;background:#f0f1ea;padding:4px;border-radius:6px}.tabs button{border:none;background:none;border-radius:4px;font-size:11px;padding:7px 12px;color:var(--muted)}.tabs button[aria-pressed=true]{background:white;color:var(--green);box-shadow:0 1px 4px #0001;font-weight:650}.gear-tabs{margin-bottom:17px}.gear-tabs button{flex:1}.range-label{display:flex;justify-content:space-between;font-size:11px;margin-top:14px}.range-label output{font:11px ui-monospace,monospace;color:var(--green)}input[type=range]{accent-color:var(--green);width:100%;height:4px;margin:14px 0 6px;cursor:pointer}.primary,.secondary{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border:1px solid var(--border);border-radius:6px;font-size:11px;font-weight:550;background:white;color:var(--green)}.primary{background:var(--green);border-color:var(--green);color:white;margin-top:12px;justify-content:space-between}.primary span{font-size:18px}.primary:hover:not(:disabled){background:#1b493e}.secondary:hover:not(:disabled){background:#f0f3e9}.color-row{display:flex;align-items:center;gap:10px;font-size:11px;margin:14px 0}.color-row input{width:27px;height:27px;border:1px solid var(--border);padding:2px;background:white;border-radius:4px;cursor:pointer}.export-note{text-align:center;color:#969b94;font-size:9px;margin-top:9px}.stage{min-width:0;display:flex;flex-direction:column}.toolbar{display:flex;gap:12px;justify-content:space-between;align-items:center;padding:14px 22px;border-bottom:1px solid var(--border)}.guide-toggle{display:flex;align-items:center;gap:7px;font-size:10px;color:var(--muted);white-space:nowrap}input[type=checkbox]{accent-color:var(--green)}.status{padding:12px 24px;font-size:11px;background:#fafbf6;border-bottom:1px solid #e9ece1;color:#617340;min-height:42px}.status.error{color:#9b3925;background:#fff0e9}.canvas{position:relative;flex:1;min-height:480px;display:grid;place-items:center;background-color:#f5f5ef;background-image:radial-gradient(#cad0c1 .65px,transparent .65px);background-size:16px 16px;padding:25px 30px 48px;overflow:hidden}.canvas>svg{width:100%;height:100%;max-height:690px;min-height:360px;filter:drop-shadow(0 8px 12px #39442613)}.canvas-tag{position:absolute;bottom:17px;left:24px;font:8px ui-monospace,monospace;letter-spacing:1px;color:#79826a}.canvas-tag span{color:#a1a88f}.canvas-scale{position:absolute;bottom:17px;right:24px;font:10px ui-monospace,monospace;color:#79826a}.empty{position:absolute;text-align:center;padding:30px;max-width:340px;color:var(--muted);font-size:13px}.stage-footer{display:flex;flex-wrap:wrap;gap:30px;padding:20px 25px;border-top:1px solid var(--border);align-items:center;background:#fdfdfb}.stage-footer>div{display:flex;flex-direction:column}.metric{font-size:22px;letter-spacing:-.6px;line-height:1.25}.metric small{font-size:11px;color:var(--muted)}.metric-label{font-size:9px;color:var(--muted);margin-top:4px}.metric.good{color:var(--green)}.simulation-controls{display:grid;grid-template-columns:38px 1fr 1fr;gap:18px;align-items:center;padding:15px 24px;background:#edf2df;border-top:1px solid #d6dec3}.simulation-controls button{height:38px;padding:6px}.simulation-controls .range-label{margin-top:0}.simulation-controls input{margin-bottom:5px}.howto{margin:48px 0 35px}.howto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:45px;margin-top:25px}.howto article>span{font:9px ui-monospace,monospace;letter-spacing:1px;color:#99a28b}.howto h3{font-size:17px;letter-spacing:-.3px;font-weight:550;margin:8px 0}.howto p{font-size:12px;line-height:1.8;margin:0}details{margin-top:28px;border-top:1px solid var(--border);padding-top:17px;color:var(--muted);font-size:12px}summary{cursor:pointer;color:var(--green)}details p{margin-top:12px!important}footer{border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:20px;padding:22px 4.5vw;color:#8d9483;font-size:10px}footer a{color:var(--green);text-underline-offset:3px}noscript{display:block;padding:20px;color:#9b3925}.control-section input:disabled,.control-section select:disabled{opacity:.5}
-@media(min-width:1500px){.workspace{grid-template-columns:330px minmax(0,1fr)}}@media(max-width:1000px){main{padding:0 25px}.workspace{grid-template-columns:285px minmax(0,1fr)}.toolbar{padding:12px;flex-wrap:wrap}.stage-footer{gap:20px}.canvas{padding:15px 15px 48px;min-height:400px}.privacy,.edition{display:none}.howto-grid{gap:22px}}@media(max-width:720px){header{height:65px;padding:0 18px}.brand{font-size:15px}.brand-icon{font-size:32px}.header-right{gap:0}.header-right>a{display:none}main{padding:0 14px}.intro{margin:26px 6px 22px}h1{letter-spacing:-1px}.intro p{font-size:12px}.workspace{display:flex;flex-direction:column}.controls{border-right:0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr}.control-section{padding:16px}.control-section:nth-child(2){grid-row:span 2;border-left:1px solid var(--border)}.field-grid{gap:10px 7px}.unit-field input{padding:7px 5px;font-size:13px}.tabs button{padding:7px 10px}.canvas{min-height:330px}.canvas>svg{min-height:260px;max-height:440px}.canvas-tag{font-size:7px;left:15px}.canvas-scale{right:15px}.stage-footer{gap:22px;padding:17px 20px}.metric{font-size:19px}.simulation-controls{gap:12px;padding:12px}.howto-grid{grid-template-columns:1fr;gap:24px}.howto{padding:0 8px;margin-top:30px}footer{flex-direction:column;gap:7px;padding:18px 22px}}@media(max-width:390px){.controls{display:block}.control-section:nth-child(2){border-left:0}.toolbar .tabs{width:100%}.toolbar .tabs button{flex:1}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
-.option-row{display:flex;align-items:flex-start;gap:7px;font-size:11px;color:var(--green);margin:14px 0}.option-row input{margin:3px 0 0;flex:none}.experimental-toggle{border-top:1px solid var(--border);padding-top:14px;margin-bottom:6px}.status.warning{color:#805c25;background:#fff6e1}.metric.warning{color:#946827}.workspace{overflow:visible}.controls{border-radius:12px 0 0 12px}.stage{position:sticky;top:16px;align-self:start;border-radius:0 12px 12px 0;overflow:hidden}.canvas{height:clamp(360px,52vh,620px);flex:none}.canvas>svg{min-height:0;max-height:100%}.tooth-note{padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--border)}.tooth-note output{color:var(--green);font-family:ui-monospace,monospace}.toolbar{flex-wrap:wrap}.zoom-tools{display:flex;gap:3px;align-items:center}.zoom-tools output{font:10px ui-monospace,monospace;color:var(--muted);text-align:center;min-width:32px}.zoom-tools .text-button{padding:5px 7px}.zoom-tools button{min-width:28px}@media(max-width:720px){.workspace{overflow:hidden}.stage{position:static;border-radius:0;align-self:stretch}.controls{border-radius:12px 12px 0 0}.canvas{height:340px}.canvas>svg{min-height:0}}
+/* Zahnrad-Studio: baut auf ../shared/werkstatt.css auf (Tokens --ws-*). */
+.studio button,.studio a,.studio input,.studio select,.studio summary{touch-action:manipulation}
+.studio button{cursor:pointer;border:1px solid var(--ws-line-strong);border-radius:var(--ws-radius-sm);background:var(--ws-surface);color:var(--ws-green);padding:9px 12px;font-size:var(--ws-text-sm);font-weight:600;line-height:1.3;transition:background .15s,border-color .15s}
+.studio button:hover:not(:disabled){background:var(--ws-green-tint);border-color:var(--ws-green)}
+.studio button:disabled{cursor:not-allowed;opacity:.45}
+.studio input[type=checkbox],.studio input[type=range]{accent-color:var(--ws-green)}
+.studio input[type=checkbox]{width:16px;height:16px;margin:0;flex:none;cursor:pointer}
+.studio input[type=range]{display:block;width:100%;margin:8px 0 2px;cursor:pointer}
+.studio output{font:600 12px var(--ws-mono);color:var(--ws-green);font-variant-numeric:tabular-nums}
+
+/* Seitenrahmen */
+.studio{padding:0 clamp(12px,2vw,24px)}
+.ws-studio-intro{padding:16px 4px 14px}
+.ws-studio-intro h1{overflow-wrap:break-word;hyphens:auto}
+.flow{display:flex;gap:6px;list-style:none;margin:0;padding:0;counter-reset:flow;flex:none}
+.flow li{counter-increment:flow;display:flex;align-items:center;gap:8px;font-size:var(--ws-text-sm);color:var(--ws-muted);white-space:nowrap}
+.flow li::before{content:counter(flow);display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--ws-accent-soft);color:var(--ws-accent-ink);font:600 12px var(--ws-mono)}
+.flow li+li::after{order:-1;content:'';width:18px;height:1px;background:var(--ws-line-strong)}
+noscript{display:block;padding:20px;color:var(--ws-danger)}
+
+/* Werkbank: Einstellungen links, Vorschau rechts */
+.workspace{display:grid;grid-template-columns:340px minmax(0,1fr);border:1px solid var(--ws-line);border-radius:var(--ws-radius-lg);background:var(--ws-surface);box-shadow:var(--ws-shadow);overflow:hidden;outline:0}
+.controls{border-right:1px solid var(--ws-line);background:var(--ws-surface-soft);min-width:0;scrollbar-width:thin;scrollbar-color:var(--ws-line-strong) transparent}
+.control-section{padding:20px 22px;border-bottom:1px solid var(--ws-line)}
+.control-section:last-child{border-bottom:0}
+.control-section h2{display:flex;gap:10px;align-items:center;margin:0 0 16px;font-size:15px;font-weight:650;letter-spacing:-.01em}
+.control-section h2>span{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:7px;background:var(--ws-accent-soft);color:var(--ws-accent-ink);font:600 12px var(--ws-mono)}
+
+/* Eingabefelder */
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field-grid>label,.select-label{display:block;min-width:0;font-size:var(--ws-text-sm);font-weight:500;color:var(--ws-ink-soft)}
+.select-label{margin-top:14px}
+.field-grid>.select-label{margin-top:0}
+.wide{grid-column:1/-1}
+.unit-field{display:flex;align-items:center;margin-top:6px;border:1px solid var(--ws-line-strong);border-radius:var(--ws-radius-sm);background:var(--ws-surface);transition:border-color .15s,box-shadow .15s}
+.unit-field:hover{border-color:var(--ws-faint)}
+.unit-field:focus-within{border-color:var(--ws-green);box-shadow:0 0 0 3px var(--ws-green-soft)}
+.unit-field input{width:100%;min-width:0;border:0;background:transparent;padding:9px 10px;font-size:15px;color:var(--ws-ink);font-variant-numeric:tabular-nums}
+.unit-field input:focus-visible{outline:0}
+.unit-field>span{padding-right:10px;font:12px var(--ws-mono);color:var(--ws-faint)}
+.unit-field>span:empty{display:none}
+.controls input:invalid{color:var(--ws-danger)}
+.unit-field:has(input:invalid){border-color:var(--ws-danger);background:var(--ws-danger-soft)}
+.unit-field:has(input:disabled){background:var(--ws-surface-sunk);opacity:.55}
+.unit-field input:disabled{cursor:not-allowed}
+.controls select{display:block;width:100%;min-width:0;margin-top:6px;border:1px solid var(--ws-line-strong);border-radius:var(--ws-radius-sm);padding:9px 10px;background:var(--ws-surface);color:var(--ws-ink);font-size:15px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.controls select:hover{border-color:var(--ws-faint)}
+.controls select:focus-visible{outline:0;border-color:var(--ws-green);box-shadow:0 0 0 3px var(--ws-green-soft)}
+.controls select:disabled{opacity:.5;cursor:not-allowed}
+.option-row{display:flex;align-items:center;gap:9px;margin:14px 0;font-size:var(--ws-text-sm);font-weight:500;color:var(--ws-ink-soft);cursor:pointer}
+.experimental-toggle{margin:16px 0 4px;padding-top:14px;border-top:1px solid var(--ws-line)}
+.range-label{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:14px;font-size:var(--ws-text-sm);font-weight:500;color:var(--ws-ink-soft)}
+.tooth-note{padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--ws-line)}
+.color-row{display:flex;align-items:center;gap:10px;margin:14px 0;font-size:var(--ws-text-sm);color:var(--ws-ink-soft);cursor:pointer}
+.color-row input{width:34px;height:34px;padding:3px;border:1px solid var(--ws-line-strong);border-radius:var(--ws-radius-sm);background:var(--ws-surface);cursor:pointer}
+.small{margin:12px 0 0;font-size:var(--ws-text-xs);line-height:1.6;color:var(--ws-muted)}
+.small.tooth-note{margin-top:12px}
+.small output{font-weight:600}
+
+/* Segment-Tabs */
+.tabs{display:flex;gap:2px;padding:3px;border-radius:var(--ws-radius);background:var(--ws-surface-sunk)}
+.studio .tabs button{border:0;background:transparent;color:var(--ws-muted);padding:8px 14px;border-radius:8px}
+.studio .tabs button:hover:not(:disabled){background:#ffffff99;color:var(--ws-ink)}
+.studio .tabs button[aria-pressed=true]{background:var(--ws-surface);color:var(--ws-green);box-shadow:var(--ws-shadow-sm),inset 0 0 0 1px var(--ws-line)}
+.gear-tabs{margin-bottom:16px}
+.gear-tabs button{flex:1}
+
+/* Schaltflächen */
+.studio .secondary{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:4px}
+.studio .primary{display:flex;justify-content:space-between;align-items:center;gap:14px;width:100%;margin-top:12px;padding:13px 16px;border-color:var(--ws-green);background:var(--ws-green);color:#fff;font-size:15px;border-radius:var(--ws-radius);box-shadow:0 6px 16px -8px #173d3399}
+.studio .primary:hover:not(:disabled){background:var(--ws-green-strong);border-color:var(--ws-green-strong)}
+.primary span{font-size:18px;line-height:1}
+.export-note{margin:10px 0 0;text-align:center;font-size:var(--ws-text-xs);line-height:1.6;color:var(--ws-muted)}
+
+/* Vorschau */
+.stage{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--ws-surface)}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--ws-line)}
+.zoom-tools{display:flex;align-items:center;gap:2px;padding:3px;border-radius:var(--ws-radius);background:var(--ws-surface-sunk)}
+.studio .zoom-tools button{min-width:34px;border:0;background:transparent;color:var(--ws-green);padding:7px 10px;border-radius:8px;font-size:15px}
+.studio .zoom-tools button:hover:not(:disabled){background:var(--ws-surface);box-shadow:var(--ws-shadow-sm)}
+.studio .zoom-tools #zoomFit{font-size:var(--ws-text-sm)}
+.zoom-tools output{min-width:36px;text-align:center;color:var(--ws-ink-soft)}
+.guide-toggle{display:flex;align-items:center;gap:8px;font-size:var(--ws-text-sm);color:var(--ws-ink-soft);white-space:nowrap;cursor:pointer}
+.status{margin:0;padding:10px 18px;min-height:41px;font-size:var(--ws-text-sm);color:var(--ws-ok);background:var(--ws-green-tint);border-bottom:1px solid var(--ws-green-soft);font-variant-numeric:tabular-nums}
+.status.warning{color:var(--ws-warn);background:var(--ws-warn-soft);border-color:color-mix(in srgb,var(--ws-warn) 22%,transparent)}
+.status.error{color:var(--ws-danger);background:var(--ws-danger-soft);border-color:color-mix(in srgb,var(--ws-danger) 22%,transparent)}
+.canvas{position:relative;flex:1 1 auto;min-height:340px;overflow:hidden;background-color:var(--ws-surface-sunk);background-image:radial-gradient(#c9cfc0 .8px,transparent .8px);background-size:16px 16px}
+.canvas>svg{position:absolute;top:20px;left:24px;width:calc(100% - 48px);height:calc(100% - 68px);filter:drop-shadow(0 8px 12px #39442613)}
+.empty{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(340px,calc(100% - 32px));padding:18px;text-align:center;font-size:var(--ws-text-sm);color:var(--ws-muted);background:#ffffffcc;border-radius:var(--ws-radius)}
+.canvas-tag,.canvas-scale{position:absolute;bottom:12px;padding:3px 9px;border-radius:99px;background:#ffffffcc;font:12px var(--ws-mono);letter-spacing:.04em;color:var(--ws-faint);white-space:nowrap}
+.canvas-tag{left:16px}
+.canvas-tag span{color:var(--ws-muted)}
+.canvas-scale{right:16px}
+.simulation-controls{display:grid;grid-template-columns:44px minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:center;padding:12px 18px;background:var(--ws-accent-soft);border-top:1px solid color-mix(in srgb,var(--ws-accent) 22%,transparent)}
+.studio .simulation-controls>button{width:44px;height:44px;margin:0;padding:0;border-radius:50%;font-size:16px;background:var(--ws-green);border-color:var(--ws-green);color:#fff;box-shadow:0 6px 14px -6px #173d33aa}
+.studio .simulation-controls>button:hover:not(:disabled){background:var(--ws-green-strong);border-color:var(--ws-green-strong)}
+.simulation-controls .range-label{margin-top:0;color:var(--ws-accent-ink)}
+.simulation-controls output{color:var(--ws-accent-ink)}
+.stage-footer{display:flex;flex-wrap:wrap;align-items:center;gap:14px 32px;padding:14px 18px;border-top:1px solid var(--ws-line);background:var(--ws-surface-soft)}
+.stage-footer>div{display:flex;flex-direction:column;min-width:0}
+.metric{font-size:24px;font-weight:600;line-height:1.2;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.metric.good{color:var(--ws-green)}
+.metric.warning{color:var(--ws-warn)}
+.metric-label{margin-top:2px;font-size:var(--ws-text-xs);color:var(--ws-muted)}
+
+/* Anleitung */
+.howto{margin:56px 4px 40px}
+.howto>.eyebrow{font:650 var(--ws-text-xs)/1.4 var(--ws-font);letter-spacing:.12em;text-transform:uppercase;color:var(--ws-accent-ink)}
+.howto-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:18px}
+.howto article{padding:22px;border:1px solid var(--ws-line);border-radius:var(--ws-radius-lg);background:var(--ws-surface-soft)}
+.howto article>span{font:600 12px var(--ws-mono);letter-spacing:.08em;color:var(--ws-accent-ink)}
+.howto h3{margin:8px 0;font-size:18px;font-weight:650;letter-spacing:-.015em}
+.howto p{margin:0;font-size:14px;line-height:1.65;color:var(--ws-muted)}
+#howto details{margin-top:20px;padding:0 20px;border:1px solid var(--ws-line);border-radius:var(--ws-radius-lg);background:var(--ws-surface)}
+#howto summary{padding:16px 0;cursor:pointer;color:var(--ws-green);font-weight:600;font-size:15px}
+#howto details p{max-width:80ch;margin:0 0 14px!important}
+#howto details p:last-child{margin-bottom:18px!important}
+
+/* Desktop: die Werkbank füllt den Bildschirm, Einstellungen scrollen für sich. */
+@media (min-width:1024px) and (min-height:640px){
+  .studio-app{display:flex;flex-direction:column;height:calc(100dvh - var(--ws-bar-h));min-height:620px;padding-bottom:16px}
+  .workspace{flex:1;min-height:0}
+  .controls{overflow-y:auto;overscroll-behavior:contain}
+  .stage{overflow-y:auto;overscroll-behavior:contain}
+  .canvas{flex:1 0 max(320px,50%)}
+}
+@media (min-width:1500px){.workspace{grid-template-columns:360px minmax(0,1fr)}}
+@media (max-width:1180px){.flow{display:none}.stage-footer{gap:12px 22px}.howto-grid{gap:14px}}
+@media (max-width:1023px){
+  .workspace{display:flex;flex-direction:column}
+  .stage{order:-1;border-bottom:1px solid var(--ws-line)}
+  .controls{display:grid;grid-template-columns:1fr 1fr;border-right:0}
+  .control-section:nth-child(2){grid-row:span 2;border-left:1px solid var(--ws-line)}
+  .canvas{flex:none;height:clamp(320px,52vh,520px)}
+  .studio .tabs button,.studio .zoom-tools button{min-height:40px}
+  .studio .zoom-tools button{min-width:40px}
+  .guide-toggle,.option-row,.color-row{min-height:40px}
+  .studio .secondary{min-height:44px}
+  .controls select{min-height:42px}
+  .studio input[type=range]{height:40px;margin:0}
+}
+@media (max-width:760px){
+  .ws-studio-intro h1{font-size:24px}
+  .controls{grid-template-columns:1fr}
+  .control-section:nth-child(2){grid-row:auto;border-left:0}
+  .control-section{padding:18px 16px}
+  .canvas{height:340px}
+  .canvas>svg{top:14px;left:12px;width:calc(100% - 24px);height:calc(100% - 58px)}
+  .canvas-tag{left:10px}
+  .canvas-scale{right:10px}
+  .toolbar{padding:10px 12px}
+  .simulation-controls{gap:14px;padding:12px 14px}
+  .stage-footer{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;padding:14px}
+  .metric{font-size:21px}
+  .howto-grid{grid-template-columns:1fr}
+  .howto{margin-top:36px}
+}
+@media (max-width:520px){
+  .toolbar>.tabs{width:100%}
+  .toolbar>.tabs button{flex:1;padding-inline:8px}
+  .simulation-controls{grid-template-columns:44px minmax(0,1fr)}
+  .simulation-controls>div:last-child{grid-column:1/-1}
+}
+@media (max-width:390px){
+  .field-grid{gap:10px 8px}
+  .unit-field input{padding:9px 8px}
+  .canvas{height:300px}
+  .canvas-tag{max-width:calc(100% - 20px);overflow:hidden;text-overflow:ellipsis}
+  .canvas-scale{display:none}
+}
+@media print{.workspace{box-shadow:none}}
 </style>
+<script type="module" src="../shared/werkstatt.mjs"></script>
 </head>
 <body data-app="zahnrad-studio">
-<header><a class="brand" href="../" aria-label="Zur Digitalen Werkstatt"><span class="brand-icon" aria-hidden="true">⚙</span><span>Zahnrad<span class="brand-light"> / Studio</span></span></a><div class="header-right"><span class="privacy"><i></i> Dein Entwurf bleibt im Browser</span><a class="text-button" href="../">Werkstatt ↗</a><button class="text-button" id="help">So funktioniert’s ↗</button></div></header>
-<main>
-<section class="intro" data-hero="zahnrad-studio"><div><div class="eyebrow" data-hero-eyebrow>AUS ZWEI RÄDERN WIRD BEWEGUNG</div><h1 data-hero-headline>Zahn für Zahn. Im Zusammenspiel.</h1><p data-hero-subline>Zahnräder gestalten, den Eingriff ausprobieren, mit dem Laser schneiden.</p></div><span class="edition">WERKZEUG № 05<br>ENTWURF → BEWEGUNG</span></section>
+<a class="ws-skip" href="#werkbank">Zur Werkbank springen</a>
+<header class="ws-bar"><a class="ws-brand" href="../" aria-label="Digitale Werkstatt – Startseite"><svg class="ws-icon" aria-hidden="true"><use href="../shared/icons.svg#i-werkstatt"/></svg><span>Werkstatt</span></a><span class="ws-crumb" aria-hidden="true">/</span><details class="ws-switcher" data-ws-switcher="zahnrad-studio"><summary aria-label="Zahnrad-Studio – anderes Studio wählen"><span class="ws-studio-mark"><svg class="ws-icon" aria-hidden="true"><use href="../shared/icons.svg#i-zahnrad"/></svg></span>Zahnrad-Studio<svg class="ws-icon ws-chevron" aria-hidden="true"><use href="../shared/icons.svg#i-chevron"/></svg></summary><div class="ws-menu"><a class="ws-menu-all" href="../#werkzeuge">Alle Studios</a></div></details><div class="ws-bar-actions"><span class="ws-local">Dein Entwurf bleibt im Browser</span><a class="ws-link" id="help" href="#howto">So funktioniert’s</a></div></header>
+<main class="studio">
+<div class="studio-app">
+<section class="intro ws-studio-intro" data-hero="zahnrad-studio"><div><div class="eyebrow" data-hero-eyebrow>AUS ZWEI RÄDERN WIRD BEWEGUNG</div><h1 data-hero-headline>Zahn für Zahn. Im Zusammenspiel.</h1><p data-hero-subline>Zahnräder gestalten, den Eingriff ausprobieren, mit dem Laser schneiden.</p></div><ol class="flow" aria-label="Ablauf"><li>Paar abstimmen</li><li>Drehprobe machen</li><li>SVG herunterladen</li></ol></section>
 <noscript>Bitte JavaScript aktivieren, um Zahnräder zu berechnen und SVG-Dateien zu exportieren.</noscript>
-<div class="workspace">
+<div class="workspace" id="werkbank" tabindex="-1">
 <aside class="controls" aria-label="Zahnräder einstellen">
 <section class="control-section"><h2><span>01</span> Passendes Paar</h2><div class="field-grid">
 <label>Zahngröße · Modul<div class="unit-field"><input id="module" type="number" min="0.05" max="5" step="any" value="2"><span>mm</span></div></label>
@@ -37,8 +209,9 @@
 <div class="stage-footer"><div><span class="metric" id="diameters">—</span><span class="metric-label">Außendurchmesser · mm</span></div><div><span class="metric" id="distance">—</span><span class="metric-label">Achsabstand · mm</span></div><div><span class="metric good" id="ratio">—</span><span class="metric-label">Übersetzung · Rad 2 : Rad 1</span></div><div><span class="metric good" id="quality">—</span><span class="metric-label">Geometrieprüfung</span></div></div>
 </section>
 </div>
+</div>
 <section class="howto" id="howto"><div class="eyebrow">VOM ENTWURF ZUM ERSTEN DREH</div><div class="howto-grid"><article><span>1 / GESTALTEN</span><h3>Fein, flach oder spitz.</h3><p>Halte den Teilkreisdurchmesser von Rad 1 fest und erhöhe die Zähnezahl für feinere Zähne. Die Zahnhöhe und die Endform stellst du pro Rad ein. Standard, flach, spitz, rund und abgeschrägt stehen zur Wahl.</p></article><article><span>2 / AUSPROBIEREN</span><h3>Bewegung sichtbar machen.</h3><p>Die Drehprobe bewegt beide Räder entsprechend ihrer Zähnezahlen. Im Standardmodus wird der Eingriff geprüft. Freie Zahnprofile lassen auch experimentelle Formen mit Hinweisen zu; deren reale Bewegung ist nicht bestätigt.</p></article><article><span>3 / HERSTELLEN</span><h3>Erst innen. Dann außen.</h3><p>Das Schnittlayout trennt beide Räder mit 5 mm Abstand. SVG im Maßstab 1:1 importieren. Erst Achsenlöcher und Aussparungen, danach Außenkonturen schneiden. Sehr feine Zähne hängen von der Auflösung deines Lasers ab: einen Probeschnitt machen.</p></article></div><details><summary>Zahnhöhe, freies Profil und Geometrieprüfung</summary><p>Die Zahnhöhe gibt an, wie weit ein Zahn über den Teilkreis ragt. 100 % entsprechen einer Modulhöhe. Ein kleinerer Wert ergibt flache Zähne, ohne die Teilung zu ändern. Die Fußtiefe des Gegenrads passt sich an. Bei spitzen, runden und abgeschrägten Enden bestimmt der Formanteil, wie viel des oberen Zahns umgeformt wird; dadurch kann die wirksame Zahnflanke kürzer werden.</p><p>Der Eingriffswinkel gilt für beide Räder und kann zwischen 5° und 45° liegen. Nicht jede Kombination aus Winkel, Höhe und Zähnezahl ergibt einen stetigen Eingriff. Mit „Freie Zahnprofile erlauben“ kannst du solche Entwürfe trotzdem exportieren. Hinweise auf zu geringe Überdeckung oder Kollisionen bleiben sichtbar und werden in der SVG vermerkt. Ungültige, sich selbst überschneidende oder zu dünne Grundkonturen bleiben gesperrt.</p><p>Das Zahnspiel ist der zusätzliche Abstand zwischen den Zahnflanken am Teilkreis. Es wird gleichmäßig auf beide Räder verteilt und beim Skalieren des Moduls proportional angepasst. Die Schnittfuge beschreibt dagegen das vom Laser entfernte Material. Sie wird separat in der Lasersoftware kompensiert.</p><p>Die Zahnflanken sind Evolventen ohne Profilverschiebung. Unterhalb des Grundkreises werden sie radial zum Fußkreis fortgesetzt. Kurven werden mit höchstens 0,005 mm beziehungsweise 0,0025 × Modul Abweichung angenähert; es gilt der kleinere Wert. Der minimale Materialsteg betrifft Nabe, Rand und Speichen; Zahnspitzen werden separat geprüft.</p><p>Geprüft werden Konturen, Materialstege, zulässiger Kontaktbereich, Überdeckungsgrad und der Eingriff an mehreren Positionen eines Zahnzyklus. Die Drehprobe ist ideal synchronisiert und keine Physiksimulation. Materialfestigkeit, Achspassung und reale Bewegung erfordern einen Probeschnitt und einen Aufbau. Teilkreise und Achsenmarkierungen sind ausschließlich Vorschauhilfen.</p></details></section>
-</main><footer><span>Entworfen für neugierige Hände.</span><a href="../drehscheiben-studio/">Zum Drehscheiben-Studio ↗</a><span>Lokale Verarbeitung · Keine Uploads · Version 1.1</span></footer>
+</main><footer class="ws-footer"><span>Entworfen für neugierige Hände.</span><a href="../drehscheiben-studio/">Zum Drehscheiben-Studio ↗</a><span>Lokale Verarbeitung · Keine Uploads · Version 1.1</span></footer>
 <script type="module">
 import {defaults,buildModel,exportSVG,pathData,placement} from './geometry.mjs?v=1.1';
 const $=id=>document.getElementById(id),ns='http://www.w3.org/2000/svg';

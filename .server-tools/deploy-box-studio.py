@@ -7,6 +7,7 @@ import re
 import subprocess
 import tarfile
 import tempfile
+from urllib.request import urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 HOST = 'root@v2202606364772466585.supersrv.de'
@@ -103,6 +104,23 @@ except Exception:
 print(json.dumps({'url':public+'/box-studio/','backup':str(backup),'parts':len(result['parts']),'sheets':len(result['sheets'])}))
 '''
 
+# Startseite und Studio laden die gemeinsame Gestaltung aus /shared/.
+# Sie wird nur von deploy-workshop-updates.py veröffentlicht und muss vorher aktuell sein.
+SHARED_DEPENDENCIES = ('shared/werkstatt.css', 'shared/werkstatt.mjs', 'shared/studios.mjs', 'shared/icons.svg')
+
+
+def require_published_shared(public='https://v2202606364772466585.supersrv.de'):
+    for name in SHARED_DEPENDENCIES:
+        try:
+            with urlopen(public + '/' + name, timeout=15) as response:
+                published = hashlib.sha256(response.read()).hexdigest()
+        except OSError as error:
+            raise SystemExit(f'{name} ist auf dem Server nicht erreichbar ({error}). Zuerst .server-tools/deploy-workshop-updates.py ausführen.')
+        if published != hashlib.sha256((ROOT / 'website' / name).read_bytes()).hexdigest():
+            raise SystemExit(f'{name} ist auf dem Server nicht aktuell. Zuerst .server-tools/deploy-workshop-updates.py ausführen.')
+
+
+require_published_shared()
 with tempfile.TemporaryDirectory(prefix='box-studio-deploy-') as temporary:
     archive = Path(temporary)/'studio.tgz'
     files=[ROOT/'website/index.html']

@@ -20,6 +20,7 @@ async function show(id) {
     if (report.preview) $('preview').src = './api/reports/' + encodeURIComponent(id) + '/preview'; else $('preview').removeAttribute('src');
     const { preview, ...data } = report;
     $('data').textContent = JSON.stringify(data, null, 2);
+    for (const item of $('list').children) item.setAttribute('aria-current', String(item.dataset.id === id));
     $('detail').hidden = false; $('detail-title').focus();
   } catch (error) { if (token === selection) $('status').textContent = error.message; }
 }
@@ -30,7 +31,7 @@ async function list() {
     $('list').replaceChildren();
     for (const report of result.reports) {
       const button = document.createElement('button'), title = document.createElement('strong'), meta = document.createElement('span'), text = document.createElement('span');
-      button.className = 'report'; title.textContent = `№ ${report.number} · ${names[report.app] || report.app}`;
+      button.className = 'report'; button.dataset.id = report.id; title.textContent = `№ ${report.number} · ${names[report.app] || report.app}`;
       meta.textContent = date(report.createdAt) + (report.hasPreview ? ' · Mit Vorschaubild' : '');
       text.textContent = report.description || 'Keine zusätzliche Beschreibung.';
       button.append(title, meta, text); button.addEventListener('click', () => show(report.id)); $('list').append(button);
